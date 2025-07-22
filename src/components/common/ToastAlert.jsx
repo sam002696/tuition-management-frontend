@@ -6,11 +6,11 @@ import "react-toastify/dist/ReactToastify.css";
 import {
   clearToastAlert,
   selectToastAlert,
-} from "../../store/slices/errorSlice";
+} from "../../slices/error/errorSlice";
 
 const ToastAlert = () => {
   // Getting toast alert state from Redux
-  const { type, message } = useSelector(selectToastAlert);
+  const { type, message } = useSelector(selectToastAlert) || {};
   const dispatch = useDispatch();
 
   // Showing toast alert when type and message are available
