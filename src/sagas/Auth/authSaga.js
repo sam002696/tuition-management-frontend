@@ -33,11 +33,11 @@ function* loginSaga({ payload }) {
     yield put(loginSuccess(response.data));
     yield put(setToastAlert({ type: "success", message: response.message }));
 
-    // if (navigate && response?.data?.user?.role === "admin") {
-    //   navigate("/dashboard");
-    // } else {
-    //   navigate("/home");
-    // }
+    if (navigate && response?.data?.user?.role === "teacher") {
+      navigate("/dashboard");
+    } else {
+      navigate("/home");
+    }
   } catch (error) {
     const message = error.message || "Login failed.";
     yield put(loginFailure(message));
