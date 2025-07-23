@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import {
   Disclosure,
   DisclosureButton,
@@ -7,15 +6,11 @@ import {
 import { ChevronRightIcon, Cog6ToothIcon } from "@heroicons/react/20/solid";
 import { Link, useLocation } from "react-router";
 import {
-  HomeIcon,
   ChartPieIcon,
-  FolderIcon,
   UserPlusIcon,
   UserGroupIcon,
   CalendarIcon,
 } from "@heroicons/react/24/outline";
-
-// import EcomLogo from "../../assets/logo/Merchly.png";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: ChartPieIcon },
@@ -80,10 +75,16 @@ export default function Sidebar() {
                       >
                         {item.icon && (
                           <item.icon
-                            className="h-6 w-6 text-gray-400 group-hover:text-indigo-600"
+                            className={classNames(
+                              location.pathname.startsWith(item.href)
+                                ? "text-indigo-600"
+                                : "text-gray-400 group-hover:text-indigo-600",
+                              "h-6 w-6"
+                            )}
                             aria-hidden="true"
                           />
                         )}
+
                         {item.name}
                       </Link>
                     ) : (
