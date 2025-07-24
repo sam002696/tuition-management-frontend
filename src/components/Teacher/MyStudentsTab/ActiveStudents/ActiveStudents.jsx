@@ -1,61 +1,92 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import DataTable from "../../../common/DataTable";
+import {
+  EyeIcon,
+  PencilSquareIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 
-const ActiveStudents = () => {
-  const dispatch = useDispatch();
-  const { acceptedRequests } = useSelector((state) => state.studentManagement);
-
-  useEffect(() => {
-    dispatch({ type: "FETCH_ACCEPTED_REQUESTS" });
-  }, [dispatch]);
+const ActiveStudents = ({ connectionRequests }) => {
+  const data = connectionRequests || [];
 
   const columns = [
-    { key: "name", header: "Name" },
-    { key: "title", header: "Title" },
-    { key: "email", header: "Email" },
-    { key: "role", header: "Role" },
     {
-      key: "edit",
+      key: "student_info",
+      header: "Student Info",
+      render: (item) => (
+        <div>
+          <div className="font-medium text-gray-900">{item.student.name}</div>
+          <div className="text-gray-500 text-sm">{item.student.email}</div>
+        </div>
+      ),
+    },
+    {
+      key: "custom_id",
+      header: "Student ID",
+      render: (item) => item.student.custom_id,
+    },
+    {
+      key: "phone",
+      header: "Phone",
+      render: (item) => item.student.phone,
+    },
+    {
+      key: "class_level",
+      header: "Class",
+      render: (item) => item.tuition_details.class_level,
+    },
+    {
+      key: "status",
+      header: "Status",
+      render: (item) => (
+        <span
+          className={`px-2 py-1 text-xs rounded-full ${
+            item.status === "accepted"
+              ? "bg-green-100 text-green-800"
+              : item.status === "pending"
+              ? "bg-yellow-100 text-yellow-800"
+              : "bg-gray-100 text-gray-800"
+          }`}
+        >
+          {item.status}
+        </span>
+      ),
+    },
+    {
+      key: "actions",
       header: "Action",
       alignRight: true,
       render: (item) => (
-        <a href="#" className="text-indigo-600 hover:text-indigo-900">
-          Edit<span className="sr-only">, {item.name}</span>
-        </a>
+        <div className="flex items-center justify-end space-x-2">
+          <button
+            type="button"
+            title="View"
+            className="p-1 text-blue-600 hover:text-blue-800 cursor-pointer"
+            onClick={() => console.log("View", item)}
+          >
+            <EyeIcon className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            title="Edit"
+            className="p-1 text-green-600 hover:text-green-800 cursor-pointer"
+            onClick={() => console.log("Edit", item)}
+          >
+            <PencilSquareIcon className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            title="Delete"
+            className="p-1 text-red-600 hover:text-red-800 cursor-pointer"
+            onClick={() => console.log("Delete", item)}
+          >
+            <TrashIcon className="h-5 w-5" />
+          </button>
+        </div>
       ),
     },
   ];
 
-  // Placeholder data until you map real API data
-  const people = [
-    {
-      name: "Lindsay Walton",
-      title: "Front-end Developer",
-      email: "lindsay.walton@example.com",
-      role: "Member",
-    },
-    {
-      name: "Courtney Henry",
-      title: "Designer",
-      email: "courtney.henry@example.com",
-      role: "Admin",
-    },
-  ];
-
-  console.log("acceptedRequests", acceptedRequests);
-
-  return (
-    <div className="px-4 sm:px-6 lg:px-8">
-      {/* <h1 className="text-base font-semibold text-gray-900">Active Students</h1>
-      <p className="mt-2 text-sm text-gray-700">
-        List of students currently connected and accepted.
-      </p> */}
-
-      <DataTable columns={columns} data={people} />
-      {/* Replace `people` with `acceptedRequests` once connected to backend */}
-    </div>
-  );
+  return <DataTable columns={columns} data={data} />;
 };
 
 export default ActiveStudents;

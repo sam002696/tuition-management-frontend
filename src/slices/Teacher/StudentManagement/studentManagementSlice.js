@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  acceptedRequests: [],
-  pendingRequests: [],
+  connectionRequests: [],
+  pagination: null,
   loading: false,
   error: null,
 };
@@ -11,32 +11,16 @@ const studentManagementSlice = createSlice({
   name: "studentManagement",
   initialState,
   reducers: {
-    // Actions for accepted requests
-
-    fetchAcceptedRequestsStart: (state) => {
+    fetchConnectionRequestsStart: (state) => {
       state.loading = true;
       state.error = null;
     },
-    fetchAcceptedRequestsSuccess: (state, { payload }) => {
+    fetchConnectionRequestsSuccess: (state, { payload }) => {
       state.loading = false;
-      state.acceptedRequests = payload;
+      state.connectionRequests = payload.requests;
+      state.pagination = payload.pagination;
     },
-    fetchAcceptedRequestsFailure: (state, { payload }) => {
-      state.loading = false;
-      state.error = payload;
-    },
-
-    // Actions for pending requests
-
-    fetchPendingRequestsStart: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    fetchPendingRequestsSuccess: (state, { payload }) => {
-      state.loading = false;
-      state.pendingRequests = payload;
-    },
-    fetchPendingRequestsFailure: (state, { payload }) => {
+    fetchConnectionRequestsFailure: (state, { payload }) => {
       state.loading = false;
       state.error = payload;
     },
@@ -44,13 +28,9 @@ const studentManagementSlice = createSlice({
 });
 
 export const {
-  fetchAcceptedRequestsStart,
-  fetchAcceptedRequestsSuccess,
-  fetchAcceptedRequestsFailure,
-
-  fetchPendingRequestsStart,
-  fetchPendingRequestsSuccess,
-  fetchPendingRequestsFailure,
+  fetchConnectionRequestsStart,
+  fetchConnectionRequestsSuccess,
+  fetchConnectionRequestsFailure,
 } = studentManagementSlice.actions;
 
 export default studentManagementSlice.reducer;

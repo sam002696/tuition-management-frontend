@@ -1,4 +1,3 @@
-import React from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 
 const Pagination = ({
@@ -26,7 +25,7 @@ const Pagination = ({
   };
 
   return (
-    <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+    <div className="flex items-center justify-between border-t border-gray-300 bg-white px-4 py-3 sm:px-6 rounded-bl-lg rounded-br-lg">
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         {total === 0 ? (
           <p className="text-sm text-gray-700">No results found.</p>

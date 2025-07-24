@@ -1,4 +1,3 @@
-// components/ui/Tabs.jsx
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
 
 function classNames(...classes) {
@@ -30,36 +29,37 @@ const Tabs = ({ tabs, currentTab, onTabChange }) => {
 
       {/* Desktop View */}
       <div className="hidden sm:block">
-        <nav
-          aria-label="Tabs"
-          className="isolate flex divide-x divide-gray-200 rounded-lg shadow-sm"
-        >
-          {tabs.map((tab, tabIdx) => (
-            <button
-              type="button"
-              key={tab.name}
-              onClick={() => onTabChange(tab.name)}
-              aria-current={tab.name === currentTab ? "page" : undefined}
-              className={classNames(
-                tab.name === currentTab
-                  ? "text-gray-900"
-                  : "text-gray-500 hover:text-gray-700",
-                tabIdx === 0 ? "rounded-l-lg" : "",
-                tabIdx === tabs.length - 1 ? "rounded-r-lg" : "",
-                "group relative min-w-0 flex-1 overflow-hidden bg-white px-4 py-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10 cursor-pointer"
-              )}
-            >
-              <span>{tab.name}</span>
-              <span
-                aria-hidden="true"
+        <div className="border-b border-gray-200">
+          <nav aria-label="Tabs" className="-mb-px flex space-x-8 px-4">
+            {tabs.map((tab) => (
+              <button
+                key={tab.name}
+                type="button"
+                onClick={() => onTabChange(tab.name)}
+                aria-current={tab.name === currentTab ? "page" : undefined}
                 className={classNames(
-                  tab.name === currentTab ? "bg-indigo-500" : "bg-transparent",
-                  "absolute inset-x-0 bottom-0 h-0.5"
+                  tab.name === currentTab
+                    ? "border-indigo-500 text-indigo-600"
+                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
+                  "group inline-flex items-center border-b-2  py-4 text-sm font-medium cursor-pointer"
                 )}
-              />
-            </button>
-          ))}
-        </nav>
+              >
+                {tab.icon && (
+                  <tab.icon
+                    aria-hidden="true"
+                    className={classNames(
+                      tab.name === currentTab
+                        ? "text-indigo-500"
+                        : "text-gray-400 group-hover:text-gray-500",
+                      "mr-2 -ml-0.5 size-5"
+                    )}
+                  />
+                )}
+                <span>{tab.name}</span>
+              </button>
+            ))}
+          </nav>
+        </div>
       </div>
     </div>
   );
