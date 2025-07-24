@@ -6,6 +6,8 @@ import rootSaga from "../sagas/rootSaga";
 import authReducer from "../slices/Auth/authSlice";
 import toastAlertReducer from "../slices/error/errorSlice";
 
+import studentManagementReducer from "../slices/Teacher/StudentManagement/studentManagementSlice";
+
 const sagaMiddleware = createSagaMiddleware();
 
 // Creating the Redux store
@@ -13,6 +15,7 @@ export const store = configureStore({
   reducer: {
     toastAlert: toastAlertReducer,
     auth: authReducer,
+    studentManagement: studentManagementReducer,
   },
 
   middleware: (getDefaultMiddleware) =>
