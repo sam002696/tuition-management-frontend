@@ -10,25 +10,41 @@ import {
   UserPlusIcon,
   UserGroupIcon,
   CalendarIcon,
+  EnvelopeIcon,
 } from "@heroicons/react/24/outline";
 
 const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: ChartPieIcon },
+  { name: "Overview", href: "/dashboard", icon: ChartPieIcon },
 
-  { name: "My students", href: "/my-students", icon: UserGroupIcon },
   {
-    name: "Send connection request",
+    name: "Student Management",
+    href: "/student-management",
+    icon: UserGroupIcon,
+  },
+  {
+    name: "Connect students",
     href: "/connection-request",
     icon: UserPlusIcon,
   },
   {
-    name: "Events",
+    name: "Schedule",
+    href: "/schedule",
     icon: CalendarIcon,
-    children: [
-      { name: "All events", href: "/dashboard/events" },
-      { name: "Create event", href: "/dashboard/events/create" },
-      { name: "Edit event", href: "/dashboard/events/:id/edit" },
-    ],
+  },
+
+  // {
+  //   name: "Schedule",
+  //   icon: CalendarIcon,
+  //   children: [
+  //     { name: "All events", href: "/dashboard/events" },
+  //     { name: "Create event", href: "/dashboard/events/create" },
+  //     { name: "Edit event", href: "/dashboard/events/:id/edit" },
+  //   ],
+  // },
+  {
+    name: "Messages",
+    href: "/messages",
+    icon: EnvelopeIcon,
   },
 ];
 

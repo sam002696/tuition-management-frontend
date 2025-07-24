@@ -14,7 +14,7 @@ const AdminRoutes = [
   },
 
   {
-    path: "/my-students",
+    path: "/student-management",
 
     children: [{ path: "", element: <MyStudents /> }],
   },
