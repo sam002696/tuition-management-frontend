@@ -1,11 +1,11 @@
+import DataTable from "../../../common/DataTable";
 import {
   EyeIcon,
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import DataTable from "../../../common/DataTable";
 
-const PendingStudents = ({ connectionRequests }) => {
+const PastStudents = ({ connectionRequests }) => {
   const data = connectionRequests || [];
 
   const columns = [
@@ -88,4 +88,4 @@ const PendingStudents = ({ connectionRequests }) => {
   return <DataTable columns={columns} data={data} />;
 };
 
-export default PendingStudents;
+export default PastStudents;
