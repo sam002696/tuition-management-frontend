@@ -3,6 +3,7 @@ import { useState } from "react";
 import TeacherLayout from "../../../Layout/TeacherLayout/TeacherLayout";
 import Tabs from "../../../components/common/Tabs";
 import ActiveStudents from "../../../components/Teacher/MyStudentsTab/ActiveStudents/ActiveStudents";
+import PendingStudents from "../../../components/Teacher/MyStudentsTab/PendingStudents/PendingStudents";
 
 const tabItems = [
   { name: "Active students", href: "#" },
@@ -28,7 +29,9 @@ const MyStudents = () => {
           </>
         )}
         {currentTab === "Pending students" && (
-          <div>Showing Pending Students</div>
+          <>
+            <PendingStudents />
+          </>
         )}
         {currentTab === "Past students" && <div>Showing Past Students</div>}
       </div>
