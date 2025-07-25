@@ -24,6 +24,23 @@ const studentManagementSlice = createSlice({
       state.loading = false;
       state.error = payload;
     },
+
+    // Action to disconnect a student
+    disconnectStudentStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    disconnectStudentSuccess: (state, { payload }) => {
+      state.loading = false;
+      // Optionally remove the student from the state list
+      state.connectionRequests = state.connectionRequests.filter(
+        (req) => req.id !== payload.id
+      );
+    },
+    disconnectStudentFailure: (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+    },
   },
 });
 
@@ -31,6 +48,10 @@ export const {
   fetchConnectionRequestsStart,
   fetchConnectionRequestsSuccess,
   fetchConnectionRequestsFailure,
+
+  disconnectStudentStart,
+  disconnectStudentSuccess,
+  disconnectStudentFailure,
 } = studentManagementSlice.actions;
 
 export default studentManagementSlice.reducer;

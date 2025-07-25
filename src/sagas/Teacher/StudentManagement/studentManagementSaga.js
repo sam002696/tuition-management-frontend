@@ -3,6 +3,9 @@ import {
   fetchConnectionRequestsStart,
   fetchConnectionRequestsSuccess,
   fetchConnectionRequestsFailure,
+  disconnectStudentStart,
+  disconnectStudentSuccess,
+  disconnectStudentFailure,
 } from "../../../slices/Teacher/StudentManagement/studentManagementSlice";
 import { setToastAlert } from "../../../slices/error/errorSlice";
 
@@ -34,7 +37,33 @@ function* fetchConnectionRequestsSaga(action) {
   }
 }
 
+// Worker saga to disconnect a student
+function* disconnectStudentSaga(action) {
+  try {
+    yield put(disconnectStudentStart());
+
+    const response = yield call(() =>
+      fetcher(STUDENT_MANAGEMENT_API.DISCONNECT_STUDENT(action.payload.id), {
+        method: "PATCH",
+      })
+    );
+
+    yield put(disconnectStudentSuccess({ id: action.payload.id }));
+    yield put(
+      setToastAlert({
+        type: "success",
+        message: response.message || "Student disconnected successfully.",
+      })
+    );
+  } catch (error) {
+    const message = error.message || "Failed to disconnect student.";
+    yield put(disconnectStudentFailure(message));
+    yield put(setToastAlert({ type: "error", message }));
+  }
+}
+
 // Watcher Saga
 export default function* studentManagementSaga() {
   yield takeLatest("FETCH_CONNECTION_REQUESTS", fetchConnectionRequestsSaga);
+  yield takeLatest("DISCONNECT_STUDENT", disconnectStudentSaga);
 }
