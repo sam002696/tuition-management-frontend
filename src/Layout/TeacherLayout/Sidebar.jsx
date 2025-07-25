@@ -23,7 +23,7 @@ const navigation = [
   },
   {
     name: "Connect students",
-    href: "/connection-request",
+    href: "/connect-students",
     icon: UserPlusIcon,
   },
   {
