@@ -4,9 +4,20 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import DataTable from "../../../common/DataTable";
+import { useState } from "react";
+import ModalWrapper from "../../../common/ModalWrapper";
+import StudentDetails from "../../../common/StudentDetails";
 
 const PendingStudents = ({ connectionRequests }) => {
   const data = connectionRequests || [];
+
+  const [open, setOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+
+  const handleView = (item) => {
+    setSelectedStudent(item);
+    setOpen(true);
+  };
 
   const columns = [
     {
@@ -14,25 +25,25 @@ const PendingStudents = ({ connectionRequests }) => {
       header: "Student Info",
       render: (item) => (
         <div>
-          <div className="font-medium text-gray-900">{item.student.name}</div>
-          <div className="text-gray-500 text-sm">{item.student.email}</div>
+          <div className="font-medium text-gray-900">{item?.student?.name}</div>
+          <div className="text-gray-500 text-sm">{item?.student?.email}</div>
         </div>
       ),
     },
     {
       key: "custom_id",
       header: "Student ID",
-      render: (item) => item.student.custom_id,
+      render: (item) => item?.student?.custom_id,
     },
     {
       key: "phone",
       header: "Phone",
-      render: (item) => item.student.phone,
+      render: (item) => item?.student?.phone,
     },
     {
       key: "class_level",
       header: "Class",
-      render: (item) => item.tuition_details.class_level,
+      render: (item) => item?.tuition_details?.class_level,
     },
     {
       key: "status",
@@ -61,7 +72,7 @@ const PendingStudents = ({ connectionRequests }) => {
             type="button"
             title="View"
             className="p-1 text-blue-600 hover:text-blue-800 cursor-pointer"
-            onClick={() => console.log("View", item)}
+            onClick={() => handleView(item)}
           >
             <EyeIcon className="h-5 w-5" />
           </button>
@@ -85,7 +96,14 @@ const PendingStudents = ({ connectionRequests }) => {
       ),
     },
   ];
-  return <DataTable columns={columns} data={data} />;
+  return (
+    <>
+      <DataTable columns={columns} data={data} />
+      <ModalWrapper open={open} setOpen={setOpen}>
+        {selectedStudent && <StudentDetails data={selectedStudent} />}
+      </ModalWrapper>
+    </>
+  );
 };
 
 export default PendingStudents;
