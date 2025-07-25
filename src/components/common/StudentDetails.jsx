@@ -1,4 +1,7 @@
+import { useDispatch } from "react-redux";
+
 const StudentDetails = ({ data }) => {
+  const dispatch = useDispatch();
   const { student, tuition_details } = data;
 
   // Pairs of student info
@@ -29,22 +32,43 @@ const StudentDetails = ({ data }) => {
     ["Monthly Salary", `${tuition_details.salary_per_month} BDT`],
   ];
 
-  // Utility to split array into chunks of 2
+  // Utility to split array into chunks of 5 pairs
   const chunkInPairs = (arr) =>
     arr.reduce((acc, _, i) => {
       if (i % 5 === 0) acc.push(arr.slice(i, i + 5));
       return acc;
     }, []);
 
+  const handleDisconnectStudent = (studentId) => {
+    // Dispatch action to disconnect student
+    dispatch({ type: "DISCONNECT_STUDENT", payload: { id: studentId } });
+  };
+
   return (
     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-      <div className="px-4 py-6 sm:px-6">
-        <h3 className="text-base font-semibold text-gray-900">
-          Student Information
-        </h3>
-        <p className="mt-1 max-w-2xl text-sm text-gray-500">
-          Details and tuition information.
-        </p>
+      <div className="px-4 py-6 sm:px-6 flex justify-between items-center">
+        <div>
+          <h3 className="text-base font-semibold text-gray-900">
+            Student Information
+          </h3>
+          <p className="mt-1 max-w-2xl text-sm text-gray-500">
+            Details and tuition information.
+          </p>
+        </div>
+
+        {data?.status === "accepted" && data?.is_active === 1 && (
+          <>
+            <div>
+              <button
+                type="button"
+                className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                onClick={() => handleDisconnectStudent(student.id)}
+              >
+                Diconnect {student?.name}
+              </button>
+            </div>
+          </>
+        )}
       </div>
 
       <div className="border-t border-gray-100">
