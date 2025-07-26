@@ -7,6 +7,7 @@ import authReducer from "../slices/Auth/authSlice";
 import toastAlertReducer from "../slices/error/errorSlice";
 
 import studentManagementReducer from "../slices/Teacher/StudentManagement/studentManagementSlice";
+import connectStudentsReducer from "../slices/Teacher/ConnectStudents/connectStudentSlice";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -16,6 +17,7 @@ export const store = configureStore({
     toastAlert: toastAlertReducer,
     auth: authReducer,
     studentManagement: studentManagementReducer,
+    connectStudents: connectStudentsReducer,
   },
 
   middleware: (getDefaultMiddleware) =>

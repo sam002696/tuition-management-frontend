@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 
-export default function StudentDetailsCard() {
+export default function StudentDetailsCard({ studentDetails }) {
   return (
     <div className="lg:col-start-3 lg:row-end-1 max-w-xs mr-auto mt-5">
       <h2 className="sr-only">Student Summary</h2>
@@ -16,7 +16,7 @@ export default function StudentDetailsCard() {
           <div className="flex-auto pt-6 pl-6">
             <dt className="text-sm/6 font-semibold text-gray-900">Full Name</dt>
             <dd className="mt-1 text-base font-semibold text-indigo-500">
-              Kamal Hasan
+              {studentDetails?.name}
             </dd>
           </div>
           <div className="flex-none self-end px-6 pt-4">
@@ -34,7 +34,7 @@ export default function StudentDetailsCard() {
               />
             </dt>
             <dd className="text-sm/6 font-medium text-gray-900">
-              kamal@example.com
+              {studentDetails?.email}
             </dd>
           </div>
 
@@ -45,7 +45,7 @@ export default function StudentDetailsCard() {
                 aria-hidden="true"
               />
             </dt>
-            <dd className="text-sm/6 text-gray-500">01600000000</dd>
+            <dd className="text-sm/6 text-gray-500">{studentDetails?.phone}</dd>
           </div>
 
           <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
@@ -55,7 +55,9 @@ export default function StudentDetailsCard() {
                 aria-hidden="true"
               />
             </dt>
-            <dd className="text-sm/6 text-gray-500">S01600000000</dd>
+            <dd className="text-sm/6 text-gray-500">
+              {studentDetails?.custom_id}
+            </dd>
           </div>
         </dl>
 
