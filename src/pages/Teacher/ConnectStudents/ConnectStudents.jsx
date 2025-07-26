@@ -1,10 +1,11 @@
 import StudentSearchBar from "../../../components/Teacher/ConnectStudents/SearchBar/StudentSearchBar";
+import StudentDetailsCard from "../../../components/Teacher/ConnectStudents/StudentDetails/StudentDetailsCard";
+import TuitionDetails from "../../../components/Teacher/ConnectStudents/TuitionDetails/TuitionDetails";
 import TeacherLayout from "../../../Layout/TeacherLayout/TeacherLayout";
 
 const ConnectStudents = () => {
   const handleSearch = (studentId) => {
     console.log("Search initiated for:", studentId);
-    // You can trigger a saga dispatch or API call here
   };
 
   return (
@@ -18,6 +19,16 @@ const ConnectStudents = () => {
         </p>
 
         <StudentSearchBar onSearch={handleSearch} />
+
+        <div className="mt-6 flex flex-col lg:flex-row gap-6 items-start">
+          {/* Student Card  */}
+          <StudentDetailsCard />
+
+          {/* Tuition Details  */}
+          <div className="flex-1">
+            <TuitionDetails />
+          </div>
+        </div>
       </div>
     </TeacherLayout>
   );
