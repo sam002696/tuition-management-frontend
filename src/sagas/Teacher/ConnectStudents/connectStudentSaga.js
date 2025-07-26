@@ -68,6 +68,15 @@ function* submitTuitionDetailsSaga(action) {
         message: response.message || "Tuition details submitted successfully.",
       })
     );
+
+    // After successful submission, fetch the tuition details
+    const { teacher_id, student_id } = action.payload;
+    yield call(fetchTuitionDetailsSaga, {
+      payload: {
+        teacherId: teacher_id,
+        studentId: student_id,
+      },
+    });
   } catch (error) {
     const message = error.message || "Failed to submit tuition details.";
     yield put(submitTuitionDetailsFailure(message));
@@ -97,9 +106,37 @@ function* fetchTuitionDetailsSaga(action) {
   }
 }
 
+// worker saga to make connection request to a student
+function* sendConnectionRequestSaga(action) {
+  try {
+    const { custom_id, tuition_details_id } = action.payload;
+
+    const response = yield call(() =>
+      fetcher(CONNECT_STUDENT_API.CREATE_CONNECTION_REQUEST, {
+        method: "POST",
+        body: {
+          custom_id,
+          tuition_details_id,
+        },
+      })
+    );
+
+    yield put(
+      setToastAlert({
+        type: "success",
+        message: response.message || "Connection request sent successfully.",
+      })
+    );
+  } catch (error) {
+    const message = error?.message || "Failed to send connection request.";
+    yield put(setToastAlert({ type: "error", message }));
+  }
+}
+
 // Watcher Saga
 export default function* watchConnectStudent() {
   yield takeLatest("FIND_STUDENT", findStudentSaga);
   yield takeLatest("SUBMIT_TUITION_DETAILS", submitTuitionDetailsSaga);
   yield takeLatest("FETCH_TUITION_DETAILS", fetchTuitionDetailsSaga);
+  yield takeLatest("SEND_CONNECTION_REQUEST", sendConnectionRequestSaga);
 }
