@@ -1,13 +1,36 @@
 import {
-  UserCircleIcon,
   EnvelopeIcon,
   PhoneIcon,
   IdentificationIcon,
-  UserIcon,
 } from "@heroicons/react/20/solid";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import { useDispatch, useSelector } from "react-redux";
+import { setToastAlert } from "../../../../slices/error/errorSlice";
 
 export default function StudentDetailsCard({ studentDetails }) {
+  const { tuitionDetails } = useSelector((state) => state.connectStudents);
+  const dispatch = useDispatch();
+
+  const handleConnect = () => {
+    // Dispatch an action to connect with the student
+    if (!tuitionDetails) {
+      dispatch(
+        setToastAlert({
+          type: "error",
+          message: "Please submit tuition details first.",
+        })
+      );
+      return;
+    }
+    dispatch({
+      type: "SEND_CONNECTION_REQUEST",
+      payload: {
+        custom_id: studentDetails.custom_id,
+        tuition_details_id: tuitionDetails?.id,
+      },
+    });
+  };
+
   return (
     <div className="lg:col-start-3 lg:row-end-1 max-w-xs mr-auto mt-5">
       <h2 className="sr-only">Student Summary</h2>
@@ -64,7 +87,8 @@ export default function StudentDetailsCard({ studentDetails }) {
         <div className="mt-6 border-t border-gray-900/5 px-6 py-6">
           <button
             type="button"
-            className="inline-flex items-center gap-x-1.5 rounded-md bg-green-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-green-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+            onClick={handleConnect}
+            className="inline-flex items-center gap-x-1.5 rounded-md bg-green-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-green-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 cursor-pointer"
           >
             <CheckCircleIcon aria-hidden="true" className="-ml-0.5 size-5" />
             Connect

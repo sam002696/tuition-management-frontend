@@ -5,4 +5,6 @@ export const CONNECT_STUDENT_API = {
   CREATE_TUITION_DETAILS: `${API_BASE_URL}/tuition-details`,
   FETCH_TUITION_DETAILS: (teacherId, studentId) =>
     `${API_BASE_URL}/tuition-details/teacher/${teacherId}/student/${studentId}`,
+
+  CREATE_CONNECTION_REQUEST: `${API_BASE_URL}/connection/send`,
 };
