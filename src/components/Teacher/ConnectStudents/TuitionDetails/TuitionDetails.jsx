@@ -2,117 +2,43 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import InputSelect from "../../../common/InputSelect";
 import Input from "../../../common/Input";
+import { AuthUser } from "../../../../helpers/AuthUser";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useMemo } from "react";
+import getInitialFormValues from "./getInitialTuitionFormValues";
+import validationSchema from "./validationSchema";
 
 const tuitionTypeOptions = [
   { label: "Monthly Based", value: "monthly_based" },
-  { label: "Course Based", value: "course_based" },
+  { label: "Course Based", value: "course" },
 ];
 
-// const mediumOptions = [
-//   { label: "Bangla Version", value: "Bangla Version" },
-//   { label: "English Version", value: "English Version" },
-// ];
+const TuitionDetails = ({ studentDetails }) => {
+  const teacherId = useMemo(() => AuthUser.getUser().id, []);
+  const { tuitionDetails } = useSelector((state) => state.connectStudents);
 
-// const classLevels = [
-//   { label: "Class 8", value: "Class 8" },
-//   { label: "Class 9", value: "Class 9" },
-//   { label: "Class 10", value: "Class 10" },
-// ];
-
-// const daysOptions = [
-//   { label: "Saturday", value: "Saturday" },
-//   { label: "Sunday", value: "Sunday" },
-//   { label: "Monday", value: "Monday" },
-//   { label: "Tuesday", value: "Tuesday" },
-//   { label: "Wednesday", value: "Wednesday" },
-//   { label: "Thursday", value: "Thursday" },
-//   { label: "Friday", value: "Friday" },
-// ];
-
-const validationSchema = Yup.object().shape({
-  tuition_type: Yup.string().required("Required"),
-  class_level: Yup.string().required("Required"),
-  subject_list: Yup.string().required("Required"),
-  medium: Yup.string().required("Required"),
-  institute_name: Yup.string().required("Required"),
-  address_line: Yup.string().required("Required"),
-  district: Yup.string().required("Required"),
-  thana: Yup.string().required("Required"),
-  study_purpose: Yup.string().required("Required"),
-
-  // Monthly Based
-  tuition_days_per_week: Yup.number().when("tuition_type", {
-    is: "monthly_based",
-    then: (schema) => schema.required("Required"),
-  }),
-  hours_per_day: Yup.number().when("tuition_type", {
-    is: "monthly_based",
-    then: (schema) => schema.required("Required"),
-  }),
-  days_name: Yup.string().when("tuition_type", {
-    is: "monthly_based",
-    then: (schema) => schema.required("Required"),
-  }),
-  salary_per_month: Yup.number().when("tuition_type", {
-    is: "monthly_based",
-    then: (schema) => schema.required("Required"),
-  }),
-  starting_month: Yup.string().when("tuition_type", {
-    is: "monthly_based",
-    then: (schema) => schema.required("Required"),
-  }),
-
-  // Course Based
-  total_classes_per_course: Yup.number().when("tuition_type", {
-    is: "course_based",
-    then: (schema) => schema.required("Required"),
-  }),
-  hours_per_class: Yup.number().when("tuition_type", {
-    is: "course_based",
-    then: (schema) => schema.required("Required"),
-  }),
-  salary_per_subject: Yup.number().when("tuition_type", {
-    is: "course_based",
-    then: (schema) => schema.required("Required"),
-  }),
-  total_course_completion_salary: Yup.number().when("tuition_type", {
-    is: "course_based",
-    then: (schema) => schema.required("Required"),
-  }),
-  duration: Yup.string().when("tuition_type", {
-    is: "course_based",
-    then: (schema) => schema.required("Required"),
-  }),
-});
-
-const TuitionDetails = () => {
+  const dispatch = useDispatch();
   const formik = useFormik({
-    initialValues: {
-      tuition_type: "monthly_based",
-      class_level: "",
-      subject_list: "",
-      medium: "",
-      institute_name: "",
-      address_line: "",
-      district: "",
-      thana: "",
-      study_purpose: "",
-
-      tuition_days_per_week: "",
-      hours_per_day: "",
-      days_name: "",
-      salary_per_month: "",
-      starting_month: "",
-
-      total_classes_per_course: "",
-      hours_per_class: "",
-      salary_per_subject: "",
-      total_course_completion_salary: "",
-      duration: "",
-    },
-    validationSchema,
+    initialValues: getInitialFormValues(teacherId, studentDetails?.id),
+    validationSchema: validationSchema,
     onSubmit: (values) => {
+      const payload = {
+        ...values,
+        subject_list: values.subject_list
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean), // Removes empty strings
+        days_name: values.days_name
+          .split(",")
+          .map((d) => d.trim())
+          .filter(Boolean),
+      };
       console.log("Form values:", values);
+      // Dispatching action to submit tuition details
+      dispatch({
+        type: "SUBMIT_TUITION_DETAILS",
+        payload,
+      });
     },
   });
 
@@ -120,6 +46,37 @@ const TuitionDetails = () => {
     formik;
 
   const isMonthly = values.tuition_type === "monthly_based";
+
+  useEffect(() => {
+    if (studentDetails?.id && teacherId) {
+      dispatch({
+        type: "FETCH_TUITION_DETAILS",
+        payload: {
+          teacherId: teacherId,
+          studentId: studentDetails.id,
+        },
+      });
+    }
+  }, [teacherId, studentDetails?.id, dispatch]);
+
+  useEffect(() => {
+    const shouldUpdateForm =
+      tuitionDetails &&
+      (formik.values.class_level !== tuitionDetails.class_level ||
+        formik.values.medium !== tuitionDetails.medium);
+
+    if (shouldUpdateForm) {
+      formik.setValues(
+        getInitialFormValues(teacherId, studentDetails?.id, tuitionDetails)
+      );
+    }
+
+    if (!tuitionDetails) {
+      formik.resetForm({
+        values: getInitialFormValues(teacherId, studentDetails?.id),
+      });
+    }
+  }, [tuitionDetails, studentDetails?.id, teacherId]);
 
   return (
     <form
@@ -385,10 +342,13 @@ const TuitionDetails = () => {
 
       <div className="pt-4">
         <button
+          disabled={
+            formik.isSubmitting || formik.isValidating || tuitionDetails
+          }
           type="submit"
-          className="inline-flex justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          className="inline-flex justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-500 disabled:cursor-not-allowed"
         >
-          Save and continue
+          {tuitionDetails ? "Already saved!" : "Save and continue"}
         </button>
       </div>
     </form>

@@ -24,13 +24,13 @@ const ConnectStudents = () => {
           {studentDetails !== null && (
             <>
               <StudentDetailsCard studentDetails={studentDetails} />
+
+              {/* Tuition Details  */}
+              <div className="flex-1">
+                <TuitionDetails studentDetails={studentDetails} />
+              </div>
             </>
           )}
-
-          {/* Tuition Details  */}
-          <div className="flex-1">
-            <TuitionDetails />
-          </div>
         </div>
       </div>
     </TeacherLayout>

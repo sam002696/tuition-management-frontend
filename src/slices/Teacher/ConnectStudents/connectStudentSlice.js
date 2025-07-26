@@ -4,6 +4,13 @@ const initialState = {
   studentDetails: null,
   loading: false,
   error: null,
+
+  tuitionDetails: null,
+  tuitionDetailsLoading: false,
+  tuitionDetailsError: null,
+
+  tuitionDetailsSubmitting: false,
+  tuitionDetailsSubmitError: null,
 };
 
 const connectStudentSlice = createSlice({
@@ -28,6 +35,39 @@ const connectStudentSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+
+    submitTuitionDetailsStart: (state) => {
+      state.tuitionDetailsSubmitting = true;
+      state.tuitionDetailsSubmitError = null;
+    },
+    submitTuitionDetailsSuccess: (state) => {
+      state.tuitionDetailsSubmitting = false;
+    },
+    submitTuitionDetailsFailure: (state, { payload }) => {
+      state.tuitionDetailsSubmitting = false;
+      state.tuitionDetailsSubmitError = payload;
+    },
+
+    // fetch tuition details reducers
+
+    fetchTuitionDetailsStart: (state) => {
+      state.tuitionDetailsLoading = true;
+      state.tuitionDetailsError = null;
+      state.tuitionDetails = null;
+    },
+    fetchTuitionDetailsSuccess: (state, { payload }) => {
+      state.tuitionDetailsLoading = false;
+      state.tuitionDetails = payload;
+    },
+    fetchTuitionDetailsFailure: (state, { payload }) => {
+      state.tuitionDetailsLoading = false;
+      state.tuitionDetailsError = payload;
+    },
+    clearTuitionDetails: (state) => {
+      state.tuitionDetails = null;
+      state.tuitionDetailsLoading = false;
+      state.tuitionDetailsError = null;
+    },
   },
 });
 
@@ -36,6 +76,15 @@ export const {
   findStudentSuccess,
   findStudentFailure,
   clearFoundStudent,
+
+  submitTuitionDetailsStart,
+  submitTuitionDetailsSuccess,
+  submitTuitionDetailsFailure,
+
+  fetchTuitionDetailsStart,
+  fetchTuitionDetailsSuccess,
+  fetchTuitionDetailsFailure,
+  clearTuitionDetails,
 } = connectStudentSlice.actions;
 
 export default connectStudentSlice.reducer;
