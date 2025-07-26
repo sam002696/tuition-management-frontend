@@ -3,8 +3,10 @@ import { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import Input from "../../../common/Input";
 import Button from "../../../common/Button";
+import { useDispatch } from "react-redux";
 
-const StudentSearchBar = ({ onSearch }) => {
+const StudentSearchBar = () => {
+  const dispatch = useDispatch();
   const [studentId, setStudentId] = useState("");
   const [error, setError] = useState("");
 
@@ -14,8 +16,9 @@ const StudentSearchBar = ({ onSearch }) => {
       setError("Student ID is required");
       return;
     }
+    // console.log("studentId", studentId);
     setError("");
-    onSearch(studentId.trim());
+    dispatch({ type: "FIND_STUDENT", payload: { custom_id: studentId } });
   };
 
   return (

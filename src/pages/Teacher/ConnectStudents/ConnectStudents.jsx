@@ -1,12 +1,11 @@
+import { useSelector } from "react-redux";
 import StudentSearchBar from "../../../components/Teacher/ConnectStudents/SearchBar/StudentSearchBar";
 import StudentDetailsCard from "../../../components/Teacher/ConnectStudents/StudentDetails/StudentDetailsCard";
 import TuitionDetails from "../../../components/Teacher/ConnectStudents/TuitionDetails/TuitionDetails";
 import TeacherLayout from "../../../Layout/TeacherLayout/TeacherLayout";
 
 const ConnectStudents = () => {
-  const handleSearch = (studentId) => {
-    console.log("Search initiated for:", studentId);
-  };
+  const { studentDetails } = useSelector((state) => state.connectStudents);
 
   return (
     <TeacherLayout>
@@ -18,11 +17,15 @@ const ConnectStudents = () => {
           Search for students by their ID and send connection requests
         </p>
 
-        <StudentSearchBar onSearch={handleSearch} />
+        <StudentSearchBar />
 
         <div className="mt-6 flex flex-col lg:flex-row gap-6 items-start">
           {/* Student Card  */}
-          <StudentDetailsCard />
+          {studentDetails !== null && (
+            <>
+              <StudentDetailsCard studentDetails={studentDetails} />
+            </>
+          )}
 
           {/* Tuition Details  */}
           <div className="flex-1">
