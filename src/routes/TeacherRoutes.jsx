@@ -2,11 +2,11 @@ import { lazy } from "react";
 const TeacherDashboard = lazy(() =>
   import("../pages/Teacher/Dashboard/Dashboard")
 );
-
 const MyStudents = lazy(() => import("../pages/Teacher/MyStudents/MyStudents"));
 const ConnectStudents = lazy(() =>
   import("../pages/Teacher/ConnectStudents/ConnectStudents")
 );
+const Schedule = lazy(() => import("../pages/Teacher/Schedule/Schedule"));
 
 const AdminRoutes = [
   {
@@ -25,6 +25,12 @@ const AdminRoutes = [
     path: "/connect-students",
 
     children: [{ path: "", element: <ConnectStudents /> }],
+  },
+
+  {
+    path: "/schedule",
+
+    children: [{ path: "", element: <Schedule /> }],
   },
 ];
 

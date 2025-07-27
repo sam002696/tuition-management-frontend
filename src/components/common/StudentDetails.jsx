@@ -4,32 +4,35 @@ const StudentDetails = ({ data }) => {
   const dispatch = useDispatch();
   const { student, tuition_details } = data;
 
+  const formatArray = (arr) =>
+    Array.isArray(arr) && arr.length > 0 ? arr.join(", ") : "—";
+
   // Pairs of student info
   const studentInfo = [
-    ["Full Name", student.name],
-    ["Email", student.email],
-    ["Phone", student.phone],
-    ["Student ID", student.custom_id],
+    ["Full Name", student?.name],
+    ["Email", student?.email],
+    ["Phone", student?.phone],
+    ["Student ID", student?.custom_id],
     ["Status", data.status],
   ];
 
   // Pairs of tuition details
   const tuitionInfo = [
-    ["Tuition Type", tuition_details.tuition_type],
-    ["Class Level", tuition_details.class_level],
-    ["Subjects", tuition_details.subject_list?.join(", ")],
-    ["Medium", tuition_details.medium],
-    ["Institute", tuition_details.institute_name],
+    ["Tuition Type", tuition_details?.tuition_type],
+    ["Class Level", tuition_details?.class_level],
+    ["Subjects", formatArray(tuition_details?.subject_list)],
+    ["Medium", tuition_details?.medium],
+    ["Institute", tuition_details?.institute_name],
     [
       "Address",
-      `${tuition_details.address_line}, ${tuition_details.thana}, ${tuition_details.district}`,
+      `${tuition_details?.address_line}, ${tuition_details?.thana}, ${tuition_details?.district}`,
     ],
-    ["Study Purpose", tuition_details.study_purpose],
-    ["Tuition Days/Week", tuition_details.tuition_days_per_week],
-    ["Hours/Day", tuition_details.hours_per_day],
-    ["Day Names", tuition_details.days_name?.join(", ")],
-    ["Starting Month", tuition_details.starting_month],
-    ["Monthly Salary", `${tuition_details.salary_per_month} BDT`],
+    ["Study Purpose", tuition_details?.study_purpose],
+    ["Tuition Days/Week", tuition_details?.tuition_days_per_week],
+    ["Hours/Day", tuition_details?.hours_per_day],
+    ["Day Names", formatArray(tuition_details?.days_name)],
+    ["Starting Month", tuition_details?.starting_month],
+    ["Monthly Salary", `${tuition_details?.salary_per_month} BDT`],
   ];
 
   // Utility to split array into chunks of 5 pairs
