@@ -1,6 +1,7 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import Input from "../../../common/Input";
+import { useDispatch } from "react-redux";
 
 const validationSchema = Yup.object({
   title: Yup.string().required("Title is required"),
@@ -12,23 +13,22 @@ const validationSchema = Yup.object({
   // ),
 });
 
-const TuitionEventForm = () => {
-  const handleSubmit = (values, { resetForm }) => {
-    //  Handle your form data here
+const TuitionEventForm = ({ selectedStudent }) => {
+  const dispatch = useDispatch();
+
+  const handleSubmit = (values) => {
     console.log("New Event Submitted:", values);
-
-    // Example: Save to localStorage
-    // const events = JSON.parse(localStorage.getItem("events") || "[]");
-    // events.push(values);
-    // localStorage.setItem("events", JSON.stringify(events));
-
-    // Reset the form
-    resetForm();
+    dispatch({
+      type: "SUBMIT_TUITION_EVENTS",
+      payload: values,
+    });
+    // resetForm();
   };
 
   return (
     <Formik
       initialValues={{
+        student_id: selectedStudent?.student?.id || "",
         title: "",
         description: "",
         scheduled_at: "",

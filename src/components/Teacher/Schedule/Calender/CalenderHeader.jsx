@@ -9,7 +9,12 @@ import { useState } from "react";
 import TuitionEventForm from "./TuitionEventForm";
 import ModalWrapper from "../../../common/ModalWrapper";
 
-const CalendarHeader = ({ currentMonth, currentYear, onChange }) => {
+const CalendarHeader = ({
+  currentMonth,
+  currentYear,
+  onChange,
+  selectedStudent,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const goToPreviousMonth = () => {
@@ -51,6 +56,14 @@ const CalendarHeader = ({ currentMonth, currentYear, onChange }) => {
             {formattedDate}
           </time>
         </h1>
+
+        {/* Student name */}
+        <p className="font-semibold">
+          <span className="text-indigo-500">
+            {selectedStudent?.student?.name}
+          </span>{" "}
+          Calender
+        </p>
 
         <div className="flex items-center">
           <div className="relative flex items-center rounded-md bg-white shadow-xs md:items-stretch">
@@ -164,7 +177,7 @@ const CalendarHeader = ({ currentMonth, currentYear, onChange }) => {
         setOpen={setIsModalOpen}
         title="Add New Event"
       >
-        <TuitionEventForm />
+        <TuitionEventForm selectedStudent={selectedStudent} />
       </ModalWrapper>
     </>
   );
