@@ -47,18 +47,18 @@ const scheduleTuitionEventsSlice = createSlice({
     },
 
     fetchSpecificStudentEventsStart(state) {
+      state.specificStudentEvents = [];
       state.specificStudentEventsLoading = true;
       state.specificStudentEventsError = null;
-      state.specificStudentEvents = null;
     },
     fetchSpecificStudentEventsSuccess(state, action) {
       state.specificStudentEventsLoading = false;
       state.specificStudentEvents = action.payload;
     },
     fetchSpecificStudentEventsFailure(state, action) {
+      state.specificStudentEvents = [];
       state.specificStudentEventsLoading = false;
       state.specificStudentEventsError = action.payload;
-      state.specificStudentEvents = null;
     },
   },
 });

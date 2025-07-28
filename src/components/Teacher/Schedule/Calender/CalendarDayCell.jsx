@@ -2,89 +2,25 @@ import { useEffect, useState } from "react";
 import { generateCalendarDays } from "../../../../utils/calendarUtils";
 import { useDispatch, useSelector } from "react-redux";
 
-// const eventData = [
-//   {
-//     date: "2025-07-03",
-//     events: [
-//       {
-//         id: 1,
-//         name: "Design review",
-//         time: "10AM",
-//         datetime: "2025-07-03T10:00",
-//         href: "#",
-//       },
-//       {
-//         id: 2,
-//         name: "Sales meeting",
-//         time: "2PM",
-//         datetime: "2025-07-03T14:00",
-//         href: "#",
-//       },
-//     ],
-//   },
-//   {
-//     date: "2025-07-07",
-//     events: [
-//       {
-//         id: 3,
-//         name: "Date night",
-//         time: "6PM",
-//         datetime: "2025-07-07T18:00",
-//         href: "#",
-//       },
-//     ],
-//   },
-//   {
-//     date: "2025-07-12",
-//     events: [
-//       {
-//         id: 6,
-//         name: "Sam's birthday party",
-//         time: "2PM",
-//         datetime: "2025-07-25T14:00",
-//         href: "#",
-//       },
-//     ],
-//   },
-//   {
-//     date: "2025-07-22",
-//     events: [
-//       {
-//         id: 4,
-//         name: "Maple syrup museum",
-//         time: "3PM",
-//         datetime: "2025-07-22T15:00",
-//         href: "#",
-//       },
-//       {
-//         id: 5,
-//         name: "Hockey game",
-//         time: "7PM",
-//         datetime: "2025-07-22T19:00",
-//         href: "#",
-//       },
-//     ],
-//   },
-//   {
-//     date: "2025-08-04",
-//     events: [
-//       {
-//         id: 7,
-//         name: "Cinema with friends",
-//         time: "9PM",
-//         datetime: "2025-08-04T21:00",
-//         href: "#",
-//       },
-//     ],
-//   },
-// ];
-
 const convertTo12HourFormat = (time24) => {
   if (!time24) return "";
   const [hour, minute] = time24.split(":").map(Number);
   const ampm = hour >= 12 ? "PM" : "AM";
   const hour12 = hour % 12 || 12;
   return `${hour12}:${minute.toString().padStart(2, "0")}${ampm}`;
+};
+
+const getEventTextColor = (status) => {
+  switch (status) {
+    case "accepted":
+      return "text-green-600 group-hover:text-green-800";
+    case "pending":
+      return "text-yellow-600 group-hover:text-yellow-800";
+    case "rejected":
+      return "text-red-600 group-hover:text-red-800";
+    default:
+      return "text-gray-900 group-hover:text-indigo-600"; // fallback
+  }
 };
 
 const CalendarDayCell = ({ currentMonth, currentYear, selectedStudent }) => {
@@ -108,17 +44,16 @@ const CalendarDayCell = ({ currentMonth, currentYear, selectedStudent }) => {
   // calender to generate days
 
   useEffect(() => {
-    if (!specificStudentEvents?.length) return;
-
     const transformed = specificStudentEvents.reduce((acc, item) => {
-      const date = item.scheduled_at.split(" ")[0]; // "2025-07-30"
-      const time = item.scheduled_at.split(" ")[1]?.slice(0, 5); // "15:39"
+      const date = item?.scheduled_at.split(" ")[0];
+      const time = item?.scheduled_at.split(" ")[1]?.slice(0, 5);
 
       const formattedEvent = {
-        id: item.id,
-        name: item.title,
+        id: item?.id,
+        name: item?.title,
         time: convertTo12HourFormat(time),
-        datetime: item.scheduled_at.replace(" ", "T"),
+        datetime: item?.scheduled_at.replace(" ", "T"),
+        status: item?.status,
         href: "#",
       };
 
@@ -144,8 +79,6 @@ const CalendarDayCell = ({ currentMonth, currentYear, selectedStudent }) => {
     currentMonth,
     selectedStudent?.student?.id,
   ]);
-
-  // console.log("specificStudentEvents", specificStudentEvents);
 
   return (
     <div className="shadow-sm ring-1 ring-black/5 lg:flex lg:flex-auto lg:flex-col">
@@ -179,12 +112,17 @@ const CalendarDayCell = ({ currentMonth, currentYear, selectedStudent }) => {
                   {day.events.slice(0, 2).map((event) => (
                     <li key={event.id}>
                       <a href={event.href} className="group flex">
-                        <p className="flex-auto truncate font-medium text-gray-900 group-hover:text-indigo-600">
+                        <p
+                          className={`flex-auto truncate font-medium ${getEventTextColor(
+                            event.status
+                          )}`}
+                        >
                           {event.name}
                         </p>
+
                         <time
                           dateTime={event.datetime}
-                          className="ml-3 hidden flex-none text-gray-500 group-hover:text-indigo-600 xl:block"
+                          className="ml-3 hidden flex-none text-gray-500 group-hover:text-indigo-600 xl:block font-semibold"
                         >
                           {event.time}
                         </time>
