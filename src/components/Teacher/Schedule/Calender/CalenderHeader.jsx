@@ -45,7 +45,7 @@ const CalendarHeader = ({
 
   return (
     <>
-      <header className="bg-white border border-b border-gray-200 flex items-center justify-between lg:flex-none px-6 py-4 lg:-mx-0.25">
+      <header className="bg-white border rounded-tl-lg rounded-tr-lg border-b border-gray-200 flex items-center justify-between lg:flex-none px-6 py-4 lg:-mx-0.25">
         <h1 className="text-base font-semibold text-gray-900">
           <time
             dateTime={`${currentYear}-${String(currentMonth + 1).padStart(
