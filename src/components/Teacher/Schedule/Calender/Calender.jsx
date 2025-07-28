@@ -3,7 +3,7 @@ import CalenderHeader from "./CalenderHeader";
 import CalendarDayCell from "./CalendarDayCell";
 import MobileEventList from "./MobileEventList";
 
-const Calender = () => {
+const Calender = ({ selectedStudent }) => {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth()); // 0-indexed
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
@@ -15,20 +15,29 @@ const Calender = () => {
 
   return (
     <div className="lg:flex lg:h-full lg:flex-col">
-      <CalenderHeader
-        currentMonth={currentMonth}
-        currentYear={currentYear}
-        onChange={handleDateChange}
-      />
+      {selectedStudent && (
+        <>
+          <CalenderHeader
+            currentMonth={currentMonth}
+            currentYear={currentYear}
+            onChange={handleDateChange}
+            selectedStudent={selectedStudent}
+          />
 
-      <CalendarDayCell currentMonth={currentMonth} currentYear={currentYear} />
+          <CalendarDayCell
+            currentMonth={currentMonth}
+            currentYear={currentYear}
+            selectedStudent={selectedStudent}
+          />
 
-      <div className="block lg:hidden">
-        <MobileEventList
-          currentMonth={currentMonth}
-          currentYear={currentYear}
-        />
-      </div>
+          <div className="block lg:hidden">
+            <MobileEventList
+              currentMonth={currentMonth}
+              currentYear={currentYear}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };
