@@ -54,6 +54,12 @@ function* submitTuitionEventsSaga(action) {
         message: response.message || "Tuition events submitted successfully.",
       })
     );
+
+    // call fetchSpecificStudentEventsSaga
+    yield put({
+      type: "FETCH_SPECIFIC_STUDENT_EVENTS",
+      payload: { student_id: action.payload.student_id },
+    });
   } catch (error) {
     const message = error.message || "Failed to submit tuition details.";
     yield put(submitTuitionEventsFailure(message));
