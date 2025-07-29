@@ -1,29 +1,17 @@
 import { useEffect, useState } from "react";
 import { generateCalendarDays } from "../../../../utils/calendarUtils";
 import { useDispatch, useSelector } from "react-redux";
-
-const convertTo12HourFormat = (time24) => {
-  if (!time24) return "";
-  const [hour, minute] = time24.split(":").map(Number);
-  const ampm = hour >= 12 ? "PM" : "AM";
-  const hour12 = hour % 12 || 12;
-  return `${hour12}:${minute.toString().padStart(2, "0")}${ampm}`;
-};
-
-const getEventTextColor = (status) => {
-  switch (status) {
-    case "accepted":
-      return "text-green-600 group-hover:text-green-800";
-    case "pending":
-      return "text-yellow-600 group-hover:text-yellow-800";
-    case "rejected":
-      return "text-red-600 group-hover:text-red-800";
-    default:
-      return "text-gray-900 group-hover:text-indigo-600"; // fallback
-  }
-};
+import ModalWrapper from "../../../common/ModalWrapper";
+import EventDetailsCard from "./EventDetailsCard";
+import {
+  convertTo12HourFormat,
+  getEventTextColor,
+} from "../../../../utils/calenderDayCellUtils";
 
 const CalendarDayCell = ({ currentMonth, currentYear, selectedStudent }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
   const { specificStudentEvents } = useSelector(
     (state) => state.scheduleTuitionEvents
   );
@@ -54,6 +42,7 @@ const CalendarDayCell = ({ currentMonth, currentYear, selectedStudent }) => {
         time: convertTo12HourFormat(time),
         datetime: item?.scheduled_at.replace(" ", "T"),
         status: item?.status,
+        selectedStudent: selectedStudent,
         href: "#",
       };
 
@@ -78,7 +67,13 @@ const CalendarDayCell = ({ currentMonth, currentYear, selectedStudent }) => {
     currentYear,
     currentMonth,
     selectedStudent?.student?.id,
+    selectedStudent,
   ]);
+
+  const handleShowEvent = (event) => {
+    setSelectedEvent(event);
+    setShowModal(true);
+  };
 
   return (
     <div className="shadow-sm ring-1 ring-black/5 lg:flex lg:flex-auto lg:flex-col">
@@ -110,7 +105,7 @@ const CalendarDayCell = ({ currentMonth, currentYear, selectedStudent }) => {
               {day.events?.length > 0 && (
                 <ol className="mt-2">
                   {day.events.slice(0, 2).map((event) => (
-                    <li key={event.id}>
+                    <li onClick={() => handleShowEvent(event)} key={event.id}>
                       <a href={event.href} className="group flex">
                         <p
                           className={`flex-auto truncate font-medium ${getEventTextColor(
@@ -166,6 +161,16 @@ const CalendarDayCell = ({ currentMonth, currentYear, selectedStudent }) => {
           ))}
         </div>
       </div>
+
+      {showModal && selectedEvent && (
+        <ModalWrapper
+          open={showModal}
+          setOpen={setShowModal}
+          title="Tuition Session Details"
+        >
+          <EventDetailsCard selectedEvent={selectedEvent} />
+        </ModalWrapper>
+      )}
     </div>
   );
 };
