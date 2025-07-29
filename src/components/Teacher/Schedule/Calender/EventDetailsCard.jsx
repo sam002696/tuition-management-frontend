@@ -41,6 +41,7 @@ const EventDetailsCard = ({ selectedEvent }) => {
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-800 font-semibold">
           {student.name
             ?.split(" ")
+            .filter(word => word.length > 0)
             .map((word) => word[0])
             .join("")
             .toUpperCase() || "NA"}
