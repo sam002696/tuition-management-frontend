@@ -2,6 +2,7 @@ import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { generateColor, getInitials } from "../../../../utils/avatarUtils";
+import { parseSubjectList } from "../../../../utils/parseSubjects";
 
 const ActiveStudentsList = ({ selectedStudent, setSelectedStudent }) => {
   const { activeConnections } = useSelector(
@@ -58,18 +59,12 @@ const ActiveStudentsList = ({ selectedStudent, setSelectedStudent }) => {
                   {person?.student?.name}
                 </div>
               </div>
-              <p className="mt-1 flex text-xs/5 text-gray-500">
+              <div className="mt-1 flex text-xs/5 text-gray-500">
                 <div className="relative truncate">
                   {(() => {
-                    const subjectsRaw = person?.tuition_details?.subject_list;
-                    let subjects = [];
-
-                    try {
-                      subjects = JSON.parse(subjectsRaw); // safely parse string
-                    } catch (err) {
-                      console.error("Invalid subject_list format:", err);
-                    }
-
+                    const subjects = parseSubjectList(
+                      person?.tuition_details?.subject_list
+                    );
                     const displaySubjects = subjects.slice(0, 2).join(", ");
                     const remainingCount = subjects.length - 2;
 
@@ -81,7 +76,7 @@ const ActiveStudentsList = ({ selectedStudent, setSelectedStudent }) => {
                     );
                   })()}
                 </div>
-              </p>
+              </div>
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-x-4">
