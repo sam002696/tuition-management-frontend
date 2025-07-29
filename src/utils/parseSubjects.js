@@ -8,8 +8,9 @@ export function parseSubjectList(subjectsRaw) {
     if (Array.isArray(parsed)) {
       return parsed;
     }
+    return [];
   } catch (err) {
-    console.log(err);
+    console.error(err);
     // JSON.parse failed, fallback to CSV
   }
 
