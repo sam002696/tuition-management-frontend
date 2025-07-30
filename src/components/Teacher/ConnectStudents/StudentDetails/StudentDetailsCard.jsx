@@ -24,12 +24,14 @@ export default function StudentDetailsCard({ studentDetails }) {
   // check connection status with a student regarding teacher
 
   useEffect(() => {
-    dispatch({
-      type: "CHECK_CONNECTION_STATUS",
-      payload: {
-        student_id: studentDetails?.id,
-      },
-    });
+    if (studentDetails?.id) {
+      dispatch({
+        type: "CHECK_CONNECTION_STATUS",
+        payload: {
+          student_id: studentDetails.id,
+        },
+      });
+    }
   }, [dispatch, studentDetails?.id]);
 
   const handleConnect = () => {
