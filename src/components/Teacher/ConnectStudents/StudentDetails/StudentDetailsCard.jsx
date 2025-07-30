@@ -3,13 +3,34 @@ import {
   PhoneIcon,
   IdentificationIcon,
 } from "@heroicons/react/20/solid";
-import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { useDispatch, useSelector } from "react-redux";
 import { setToastAlert } from "../../../../slices/error/errorSlice";
+import { useEffect } from "react";
+import { getConnectionButtonState } from "../../../../utils/connectionStatusUtils";
 
 export default function StudentDetailsCard({ studentDetails }) {
-  const { tuitionDetails } = useSelector((state) => state.connectStudents);
+  const { tuitionDetails, connectionStatus } = useSelector(
+    (state) => state.connectStudents
+  );
+
+  const {
+    label,
+    disabled,
+    className: buttonClass,
+    icon: Icon,
+  } = getConnectionButtonState(connectionStatus);
   const dispatch = useDispatch();
+
+  // check connection status with a student regarding teacher
+
+  useEffect(() => {
+    dispatch({
+      type: "CHECK_CONNECTION_STATUS",
+      payload: {
+        student_id: studentDetails?.id,
+      },
+    });
+  }, [dispatch, studentDetails?.id]);
 
   const handleConnect = () => {
     // Dispatch an action to connect with the student
@@ -88,10 +109,11 @@ export default function StudentDetailsCard({ studentDetails }) {
           <button
             type="button"
             onClick={handleConnect}
-            className="inline-flex items-center gap-x-1.5 rounded-md bg-green-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-green-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 cursor-pointer"
+            disabled={disabled}
+            className={`inline-flex items-center gap-x-1.5 rounded-md px-2.5 py-1.5 text-sm font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 ${buttonClass}`}
           >
-            <CheckCircleIcon aria-hidden="true" className="-ml-0.5 size-5" />
-            Connect
+            <Icon aria-hidden="true" className="-ml-0.5 size-5" />
+            {label}
           </button>
         </div>
       </div>

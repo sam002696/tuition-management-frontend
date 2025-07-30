@@ -7,4 +7,5 @@ export const CONNECT_STUDENT_API = {
     `${API_BASE_URL}/tuition-details/teacher/${teacherId}/student/${studentId}`,
 
   CREATE_CONNECTION_REQUEST: `${API_BASE_URL}/connection/send`,
+  CHECK_CONNECTION_STATUS: `${API_BASE_URL}/connection/check-connection-status`,
 };

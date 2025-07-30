@@ -11,6 +11,10 @@ const initialState = {
 
   tuitionDetailsSubmitting: false,
   tuitionDetailsSubmitError: null,
+
+  connectionStatus: null,
+  connectionStatusLoading: false,
+  connectionStatusError: null,
 };
 
 const connectStudentSlice = createSlice({
@@ -68,6 +72,27 @@ const connectStudentSlice = createSlice({
       state.tuitionDetailsLoading = false;
       state.tuitionDetailsError = null;
     },
+
+    // connection status
+
+    checkConnectionStatusStart: (state) => {
+      state.connectionStatusLoading = true;
+      state.connectionStatusError = null;
+      state.connectionStatus = null;
+    },
+    checkConnectionStatusSuccess: (state, { payload }) => {
+      state.connectionStatusLoading = false;
+      state.connectionStatus = payload; // expected: 'accepted', 'pending', etc.
+    },
+    checkConnectionStatusError: (state, { payload }) => {
+      state.connectionStatusLoading = false;
+      state.connectionStatusError = payload;
+    },
+    clearConnectionStatus: (state) => {
+      state.connectionStatus = null;
+      state.connectionStatusLoading = false;
+      state.connectionStatusError = null;
+    },
   },
 });
 
@@ -85,6 +110,11 @@ export const {
   fetchTuitionDetailsSuccess,
   fetchTuitionDetailsFailure,
   clearTuitionDetails,
+
+  checkConnectionStatusStart,
+  checkConnectionStatusSuccess,
+  checkConnectionStatusError,
+  clearConnectionStatus,
 } = connectStudentSlice.actions;
 
 export default connectStudentSlice.reducer;
