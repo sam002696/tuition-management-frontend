@@ -6,6 +6,7 @@ import {
   disconnectStudentStart,
   disconnectStudentSuccess,
   disconnectStudentFailure,
+  countConnectionsSuccess,
 } from "../../../slices/Teacher/StudentManagement/studentManagementSlice";
 import { setToastAlert } from "../../../slices/error/errorSlice";
 
@@ -62,8 +63,26 @@ function* disconnectStudentSaga(action) {
   }
 }
 
+// worker saga to count the connections
+
+function* countConnectionsSaga() {
+  try {
+    const response = yield call(() =>
+      fetcher(STUDENT_MANAGEMENT_API.COUNT_CONNECTIONS, {
+        method: "GET",
+      })
+    );
+
+    yield put(countConnectionsSuccess(response?.data?.connection_count));
+  } catch (error) {
+    const message = error?.message || "Failed to check connection status.";
+    yield put(setToastAlert({ type: "error", message }));
+  }
+}
+
 // Watcher Saga
 export default function* studentManagementSaga() {
   yield takeLatest("FETCH_CONNECTION_REQUESTS", fetchConnectionRequestsSaga);
   yield takeLatest("DISCONNECT_STUDENT", disconnectStudentSaga);
+  yield takeLatest("CONNECTION_COUNT", countConnectionsSaga);
 }
