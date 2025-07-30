@@ -157,7 +157,7 @@ function* checkConnectionStatusSaga(action) {
   } catch (error) {
     yield put(checkConnectionStatusError(error?.message));
     yield put(clearConnectionStatus());
-    const message = error?.message || "Failed to send connection request.";
+    const message = error?.message || "Failed to check connection status.";
     yield put(setToastAlert({ type: "error", message }));
   }
 }
