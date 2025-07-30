@@ -15,6 +15,10 @@ import {
   fetchTuitionDetailsSuccess,
   fetchTuitionDetailsFailure,
   clearTuitionDetails,
+  checkConnectionStatusStart,
+  checkConnectionStatusSuccess,
+  checkConnectionStatusError,
+  clearConnectionStatus,
 } from "../../../slices/Teacher/ConnectStudents/connectStudentSlice";
 import fetcher from "../../../services/fetcher";
 import { setToastAlert } from "../../../slices/error/errorSlice";
@@ -133,10 +137,36 @@ function* sendConnectionRequestSaga(action) {
   }
 }
 
+// worker saga to check connection status with a student
+
+function* checkConnectionStatusSaga(action) {
+  try {
+    yield put(checkConnectionStatusStart());
+    const { student_id } = action.payload;
+
+    const response = yield call(() =>
+      fetcher(CONNECT_STUDENT_API.CHECK_CONNECTION_STATUS, {
+        method: "POST",
+        body: {
+          student_id,
+        },
+      })
+    );
+
+    yield put(checkConnectionStatusSuccess(response?.data?.status));
+  } catch (error) {
+    yield put(checkConnectionStatusError(error?.message));
+    yield put(clearConnectionStatus());
+    const message = error?.message || "Failed to check connection status.";
+    yield put(setToastAlert({ type: "error", message }));
+  }
+}
+
 // Watcher Saga
 export default function* watchConnectStudent() {
   yield takeLatest("FIND_STUDENT", findStudentSaga);
   yield takeLatest("SUBMIT_TUITION_DETAILS", submitTuitionDetailsSaga);
   yield takeLatest("FETCH_TUITION_DETAILS", fetchTuitionDetailsSaga);
   yield takeLatest("SEND_CONNECTION_REQUEST", sendConnectionRequestSaga);
+  yield takeLatest("CHECK_CONNECTION_STATUS", checkConnectionStatusSaga);
 }
