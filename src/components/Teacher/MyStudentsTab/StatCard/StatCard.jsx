@@ -14,9 +14,41 @@ import { useDispatch, useSelector } from "react-redux";
 //   return classes.filter(Boolean).join(" ");
 // }
 
+const getStats = (connectionCount) => [
+  {
+    id: 1,
+    name: "Active Students",
+    stat: connectionCount?.active_accepted,
+    icon: UserGroupIcon,
+    change: "122",
+    changeType: "increase",
+    bgColor: "bg-green-500",
+    textColor: "text-green-700",
+  },
+  {
+    id: 2,
+    name: "Pending Students",
+    stat: connectionCount?.pending,
+    icon: ClockIcon,
+    change: "5.4%",
+    changeType: "increase",
+    bgColor: "bg-yellow-500",
+    textColor: "text-yellow-700",
+  },
+  {
+    id: 3,
+    name: "Archived Students",
+    stat: connectionCount?.inactive_accepted,
+    icon: ArchiveBoxIcon,
+    change: "3.2%",
+    changeType: "decrease",
+    bgColor: "bg-gray-500",
+    textColor: "text-gray-700",
+  },
+];
+
 const StatCard = () => {
   const { connectionCount } = useSelector((state) => state.studentManagement);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -25,50 +57,7 @@ const StatCard = () => {
     });
   }, [dispatch]);
 
-  const getStats = (connectionCount) => [
-    {
-      id: 1,
-      name: "Active Students",
-      stat: connectionCount?.active_accepted,
-      icon: UserGroupIcon,
-      change: "122",
-      changeType: "increase",
-      bgColor: "bg-green-500",
-      textColor: "text-green-700",
-    },
-    {
-      id: 2,
-      name: "Pending Students",
-      stat: connectionCount?.pending,
-      icon: ClockIcon,
-      change: "5.4%",
-      changeType: "increase",
-      bgColor: "bg-yellow-500",
-      textColor: "text-yellow-700",
-    },
-    {
-      id: 3,
-      name: "Archived Students",
-      stat: connectionCount?.inactive_accepted,
-      icon: ArchiveBoxIcon,
-      change: "3.2%",
-      changeType: "decrease",
-      bgColor: "bg-gray-500",
-      textColor: "text-gray-700",
-    },
-  ];
-
-  const StatCard = () => {
-    const { connectionCount } = useSelector((state) => state.studentManagement);
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-      dispatch({
-        type: "CONNECTION_COUNT",
-      });
-    }, [dispatch]);
-
-    const stats = getStats(connectionCount);
+  const stats = getStats(connectionCount);
   return (
     <div>
       <dl className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
