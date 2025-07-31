@@ -78,7 +78,7 @@ const StatCard = () => {
             </dt>
             <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
               <p className="text-2xl font-semibold text-gray-900">
-                {item.stat}
+                {item.stat !== undefined ? item.stat : "-"}
               </p>
               {/* <p
                 className={classNames(
