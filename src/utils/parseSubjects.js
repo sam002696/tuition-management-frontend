@@ -1,6 +1,10 @@
 // utils/parseSubjects.js
 
 export function parseSubjectList(subjectsRaw) {
+  if (Array.isArray(subjectsRaw)) {
+    return subjectsRaw;
+  }
+
   if (typeof subjectsRaw !== "string") return [];
 
   try {
