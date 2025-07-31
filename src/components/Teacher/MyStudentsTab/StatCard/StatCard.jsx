@@ -25,7 +25,7 @@ const StatCard = () => {
     });
   }, [dispatch]);
 
-  const stats = [
+  const getStats = (connectionCount) => [
     {
       id: 1,
       name: "Active Students",
@@ -57,6 +57,18 @@ const StatCard = () => {
       textColor: "text-gray-700",
     },
   ];
+
+  const StatCard = () => {
+    const { connectionCount } = useSelector((state) => state.studentManagement);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+      dispatch({
+        type: "CONNECTION_COUNT",
+      });
+    }, [dispatch]);
+
+    const stats = getStats(connectionCount);
   return (
     <div>
       <dl className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
