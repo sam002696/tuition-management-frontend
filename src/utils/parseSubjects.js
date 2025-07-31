@@ -2,7 +2,8 @@
 
 export function parseSubjectList(subjectsRaw) {
   if (Array.isArray(subjectsRaw)) {
-    return subjectsRaw;
+    if (subjectsRaw.length === 0) return [];
+    return subjectsRaw.filter(subject => subject && typeof subject === 'object');
   }
 
   if (typeof subjectsRaw !== "string") return [];
