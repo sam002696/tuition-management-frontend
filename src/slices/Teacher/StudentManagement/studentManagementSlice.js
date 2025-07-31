@@ -5,6 +5,8 @@ const initialState = {
   pagination: null,
   loading: false,
   error: null,
+
+  connectionCount: null,
 };
 
 const studentManagementSlice = createSlice({
@@ -41,6 +43,12 @@ const studentManagementSlice = createSlice({
       state.loading = false;
       state.error = payload;
     },
+
+    // connection count
+
+    countConnectionsSuccess: (state, { payload }) => {
+      state.connectionCount = payload;
+    },
   },
 });
 
@@ -52,6 +60,8 @@ export const {
   disconnectStudentStart,
   disconnectStudentSuccess,
   disconnectStudentFailure,
+
+  countConnectionsSuccess,
 } = studentManagementSlice.actions;
 
 export default studentManagementSlice.reducer;

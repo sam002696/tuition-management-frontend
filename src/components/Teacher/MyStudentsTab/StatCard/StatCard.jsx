@@ -1,51 +1,74 @@
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/20/solid";
 import {
-  CursorArrowRaysIcon,
-  EnvelopeOpenIcon,
-  UsersIcon,
+  // CursorArrowRaysIcon,
+  // EnvelopeOpenIcon,
+  // UsersIcon,
   UserGroupIcon,
   ClockIcon,
   ArchiveBoxIcon,
 } from "@heroicons/react/24/outline";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const stats = [
-  {
-    id: 1,
-    name: "Active Students",
-    stat: "71,897",
-    icon: UserGroupIcon,
-    change: "122",
-    changeType: "increase",
-    bgColor: "bg-green-500",
-    textColor: "text-green-700",
-  },
-  {
-    id: 2,
-    name: "Pending Students",
-    stat: "58.16%",
-    icon: ClockIcon,
-    change: "5.4%",
-    changeType: "increase",
-    bgColor: "bg-yellow-500",
-    textColor: "text-yellow-700",
-  },
-  {
-    id: 3,
-    name: "Archived Students",
-    stat: "24.57%",
-    icon: ArchiveBoxIcon,
-    change: "3.2%",
-    changeType: "decrease",
-    bgColor: "bg-gray-500",
-    textColor: "text-gray-700",
-  },
-];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+// function classNames(...classes) {
+//   return classes.filter(Boolean).join(" ");
+// }
 
 const StatCard = () => {
+  const { connectionCount } = useSelector((state) => state.studentManagement);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({
+      type: "CONNECTION_COUNT",
+    });
+  }, [dispatch]);
+
+  const getStats = (connectionCount) => [
+    {
+      id: 1,
+      name: "Active Students",
+      stat: connectionCount?.active_accepted,
+      icon: UserGroupIcon,
+      change: "122",
+      changeType: "increase",
+      bgColor: "bg-green-500",
+      textColor: "text-green-700",
+    },
+    {
+      id: 2,
+      name: "Pending Students",
+      stat: connectionCount?.pending,
+      icon: ClockIcon,
+      change: "5.4%",
+      changeType: "increase",
+      bgColor: "bg-yellow-500",
+      textColor: "text-yellow-700",
+    },
+    {
+      id: 3,
+      name: "Archived Students",
+      stat: connectionCount?.inactive_accepted,
+      icon: ArchiveBoxIcon,
+      change: "3.2%",
+      changeType: "decrease",
+      bgColor: "bg-gray-500",
+      textColor: "text-gray-700",
+    },
+  ];
+
+  const StatCard = () => {
+    const { connectionCount } = useSelector((state) => state.studentManagement);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+      dispatch({
+        type: "CONNECTION_COUNT",
+      });
+    }, [dispatch]);
+
+    const stats = getStats(connectionCount);
   return (
     <div>
       <dl className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -67,9 +90,9 @@ const StatCard = () => {
             </dt>
             <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
               <p className="text-2xl font-semibold text-gray-900">
-                {item.stat}
+                {item.stat !== undefined ? item.stat : "-"}
               </p>
-              <p
+              {/* <p
                 className={classNames(
                   item.changeType === "increase"
                     ? "text-green-600"
@@ -97,7 +120,7 @@ const StatCard = () => {
                   by{" "}
                 </span>
                 {item.change}
-              </p>
+              </p> */}
               <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
                 <div className="text-sm">
                   <a
