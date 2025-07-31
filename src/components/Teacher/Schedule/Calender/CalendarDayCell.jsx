@@ -8,7 +8,12 @@ import {
   getEventTextColor,
 } from "../../../../utils/calenderDayCellUtils";
 
-const CalendarDayCell = ({ currentMonth, currentYear, selectedStudent }) => {
+const CalendarDayCell = ({
+  currentMonth,
+  currentYear,
+  selectedStudent,
+  setEventList,
+}) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
@@ -75,6 +80,10 @@ const CalendarDayCell = ({ currentMonth, currentYear, selectedStudent }) => {
     setShowModal(true);
   };
 
+  const handleMoreEvents = (events) => {
+    setEventList(events);
+  };
+
   return (
     <div className="shadow-sm ring-1 ring-black/5 lg:flex lg:flex-auto lg:flex-col">
       <div className="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-xs/6 font-semibold text-gray-700 lg:flex-none">
@@ -125,7 +134,10 @@ const CalendarDayCell = ({ currentMonth, currentYear, selectedStudent }) => {
                     </li>
                   ))}
                   {day.events.length > 2 && (
-                    <li className="text-gray-500">
+                    <li
+                      onClick={() => handleMoreEvents(day.events)}
+                      className="text-gray-500"
+                    >
                       + {day.events.length - 2} more
                     </li>
                   )}

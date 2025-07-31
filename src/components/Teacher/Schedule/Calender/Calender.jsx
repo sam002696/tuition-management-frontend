@@ -3,7 +3,7 @@ import CalenderHeader from "./CalenderHeader";
 import CalendarDayCell from "./CalendarDayCell";
 import MobileEventList from "./MobileEventList";
 
-const Calender = ({ selectedStudent }) => {
+const Calender = ({ selectedStudent, setEventList }) => {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth()); // 0-indexed
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
@@ -28,6 +28,7 @@ const Calender = ({ selectedStudent }) => {
             currentMonth={currentMonth}
             currentYear={currentYear}
             selectedStudent={selectedStudent}
+            setEventList={setEventList}
           />
 
           <div className="block lg:hidden">
