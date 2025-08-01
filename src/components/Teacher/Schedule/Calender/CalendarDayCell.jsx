@@ -136,7 +136,7 @@ const CalendarDayCell = ({
                   {day.events.length > 2 && (
                     <li
                       onClick={() => handleMoreEvents(day.events)}
-                      className="text-gray-500"
+                      className="text-gray-500 cursor-pointer"
                     >
                       + {day.events.length - 2} more
                     </li>
@@ -175,11 +175,7 @@ const CalendarDayCell = ({
       </div>
 
       {showModal && selectedEvent && (
-        <ModalWrapper
-          open={showModal}
-          setOpen={setShowModal}
-          title="Tuition Session Details"
-        >
+        <ModalWrapper open={showModal} setOpen={setShowModal}>
           <EventDetailsCard selectedEvent={selectedEvent} />
         </ModalWrapper>
       )}

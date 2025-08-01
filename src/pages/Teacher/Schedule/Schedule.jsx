@@ -36,7 +36,7 @@ const Schedule = () => {
               setSelectedStudent={setSelectedStudent}
             />
 
-            <TuitionEventList />
+            <TuitionEventList eventList={eventList} />
           </div>
 
           <div className="flex-1">
