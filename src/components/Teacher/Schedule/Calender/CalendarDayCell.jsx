@@ -67,12 +67,29 @@ const CalendarDayCell = ({
       transformed
     );
     setDays(generatedDays);
+
+    //  Auto-set today's events
+    const today = new Date().toISOString().split("T")[0];
+    const todayEvents = transformed.find((day) => day.date === today);
+
+    if (todayEvents) {
+      setEventList({
+        date: todayEvents.date,
+        events: todayEvents.events,
+      });
+    } else {
+      setEventList({
+        date: null,
+        events: [],
+      });
+    }
   }, [
     specificStudentEvents,
     currentYear,
     currentMonth,
     selectedStudent?.student?.id,
     selectedStudent,
+    setEventList,
   ]);
 
   const handleShowEvent = (event) => {
@@ -80,8 +97,8 @@ const CalendarDayCell = ({
     setShowModal(true);
   };
 
-  const handleMoreEvents = (events) => {
-    setEventList(events);
+  const handleMoreEvents = (events, date) => {
+    setEventList({ date, events });
   };
 
   return (
@@ -135,7 +152,7 @@ const CalendarDayCell = ({
                   ))}
                   {day.events.length > 2 && (
                     <li
-                      onClick={() => handleMoreEvents(day.events)}
+                      onClick={() => handleMoreEvents(day.events, day.date)}
                       className="text-gray-500 cursor-pointer"
                     >
                       + {day.events.length - 2} more

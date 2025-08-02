@@ -19,10 +19,14 @@ const TuitionEventList = ({ eventList }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
+  const { date, events } = eventList || {};
+
   const handleShowEvent = (event) => {
     setSelectedEvent(event);
     setShowModal(true);
   };
+
+  console.log("eventList", eventList);
   return (
     <>
       <ul
@@ -30,13 +34,19 @@ const TuitionEventList = ({ eventList }) => {
         className="divide-y divide-gray-100 overflow-hidden bg-white 
       shadow-xs ring-1 ring-gray-900/5 sm:rounded-xl max-w-lg mt-5 p-6"
       >
-        <div>
+        <div className="flex flex-row items-center justify-between">
           <h1 className="text-2xl font-semibold text-gray-900 mb-3">
             <p className="text-indigo-500">Tuition events</p>
           </h1>
+
+          {date && (
+            <h1 className="text-sm font-semibold text-sky-700 mb-3">
+              {new Date(date).toDateString()}
+            </h1>
+          )}
         </div>
-        {Array.isArray(eventList) && eventList.length > 0 ? (
-          eventList.map((event) => (
+        {Array.isArray(events) && events.length > 0 ? (
+          events.map((event) => (
             <li
               key={event.id}
               className="flex items-center justify-between gap-x-6 py-5"
@@ -56,9 +66,12 @@ const TuitionEventList = ({ eventList }) => {
                   </p>
                 </div>
                 <div className="mt-1 flex items-center gap-x-2 text-xs/5 text-gray-500">
-                  <p className="whitespace-nowrap">
-                    <time dateTime={event.datetime}>{event.datetime}</time>
-                  </p>
+                  <time dateTime={event.datetime}>
+                    {new Date(event.datetime).toLocaleString("en-US", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </time>
                 </div>
               </div>
               <div className="flex flex-none items-center gap-x-4">
