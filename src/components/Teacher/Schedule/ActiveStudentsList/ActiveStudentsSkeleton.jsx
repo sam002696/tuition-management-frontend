@@ -1,10 +1,12 @@
-const ActiveStudentsSkeleton = ({ activeConnections }) => {
+const ActiveStudentsSkeleton = ({ activeConnections = [] }) => {
+  // Create placeholder array if activeConnections is empty
+  const placeholders = activeConnections.length > 0 ? activeConnections : Array(3).fill({});
   return (
     <ul
       role="list"
       className="divide-y divide-gray-100 overflow-hidden bg-white shadow-xs ring-1 ring-gray-900/5 sm:rounded-xl max-w-lg animate-pulse"
     >
-      {activeConnections.map((_, idx) => (
+      {placeholders.map((_, idx) => (
         <li
           key={idx}
           className="flex justify-between gap-x-6 px-4 py-5 sm:px-6"
