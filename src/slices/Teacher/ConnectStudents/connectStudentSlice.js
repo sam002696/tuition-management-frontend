@@ -40,6 +40,19 @@ const connectStudentSlice = createSlice({
       state.error = null;
     },
 
+    // send connection request
+
+    sendConnectionRequestStart: (state) => {
+      state.loading = true;
+    },
+    sendConnectionRequestSuccess: (state) => {
+      state.loading = false;
+    },
+    sendConnectionRequestFailure: (state) => {
+      state.loading = false;
+    },
+
+    // submit tuition details
     submitTuitionDetailsStart: (state) => {
       state.tuitionDetailsSubmitting = true;
       state.tuitionDetailsSubmitError = null;
@@ -115,6 +128,10 @@ export const {
   checkConnectionStatusSuccess,
   checkConnectionStatusError,
   clearConnectionStatus,
+
+  sendConnectionRequestStart,
+  sendConnectionRequestFailure,
+  sendConnectionRequestSuccess,
 } = connectStudentSlice.actions;
 
 export default connectStudentSlice.reducer;

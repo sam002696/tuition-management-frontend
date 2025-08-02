@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { getConnectionButtonState } from "../../../../utils/connectionStatusUtils";
 
 export default function StudentDetailsCard({ studentDetails }) {
-  const { tuitionDetails, connectionStatus } = useSelector(
+  const { tuitionDetails, connectionStatus, loading } = useSelector(
     (state) => state.connectStudents
   );
 
@@ -111,11 +111,11 @@ export default function StudentDetailsCard({ studentDetails }) {
           <button
             type="button"
             onClick={handleConnect}
-            disabled={disabled}
+            disabled={disabled || loading}
             className={`inline-flex items-center gap-x-1.5 rounded-md px-2.5 py-1.5 text-sm font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 ${buttonClass}`}
           >
             <Icon aria-hidden="true" className="-ml-0.5 size-5" />
-            {label}
+            {loading ? "Sending request..." : label}
           </button>
         </div>
       </div>

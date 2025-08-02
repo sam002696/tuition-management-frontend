@@ -19,6 +19,9 @@ import {
   checkConnectionStatusSuccess,
   checkConnectionStatusError,
   clearConnectionStatus,
+  sendConnectionRequestSuccess,
+  sendConnectionRequestStart,
+  sendConnectionRequestFailure,
 } from "../../../slices/Teacher/ConnectStudents/connectStudentSlice";
 import fetcher from "../../../services/fetcher";
 import { setToastAlert } from "../../../slices/error/errorSlice";
@@ -37,15 +40,15 @@ function* findStudentSaga(action) {
       })
     );
 
-    yield put(findStudentSuccess(response.data.details));
+    yield put(findStudentSuccess(response?.data?.details));
     yield put(
       setToastAlert({
         type: "success",
-        message: response.message || "Student found successfully.",
+        message: response?.message || "Student found successfully.",
       })
     );
   } catch (error) {
-    const message = error.message || "Failed to connect student.";
+    const message = error?.message || "Failed to connect student.";
     yield put(clearFoundStudent());
     yield put(findStudentFailure(message));
     yield put(setToastAlert({ type: "error", message }));
@@ -69,7 +72,7 @@ function* submitTuitionDetailsSaga(action) {
     yield put(
       setToastAlert({
         type: "success",
-        message: response.message || "Tuition details submitted successfully.",
+        message: response?.message || "Tuition details submitted successfully.",
       })
     );
 
@@ -82,7 +85,7 @@ function* submitTuitionDetailsSaga(action) {
       },
     });
   } catch (error) {
-    const message = error.message || "Failed to submit tuition details.";
+    const message = error?.message || "Failed to submit tuition details.";
     yield put(submitTuitionDetailsFailure(message));
     yield put(setToastAlert({ type: "error", message }));
   }
@@ -115,6 +118,8 @@ function* sendConnectionRequestSaga(action) {
   try {
     const { custom_id, tuition_details_id } = action.payload;
 
+    yield put(sendConnectionRequestStart());
+
     const response = yield call(() =>
       fetcher(CONNECT_STUDENT_API.CREATE_CONNECTION_REQUEST, {
         method: "POST",
@@ -128,11 +133,14 @@ function* sendConnectionRequestSaga(action) {
     yield put(
       setToastAlert({
         type: "success",
-        message: response.message || "Connection request sent successfully.",
+        message: response?.message || "Connection request sent successfully.",
       })
     );
+
+    yield put(sendConnectionRequestSuccess());
   } catch (error) {
     const message = error?.message || "Failed to send connection request.";
+    yield put(sendConnectionRequestFailure());
     yield put(setToastAlert({ type: "error", message }));
   }
 }
@@ -157,8 +165,8 @@ function* checkConnectionStatusSaga(action) {
   } catch (error) {
     yield put(checkConnectionStatusError(error?.message));
     yield put(clearConnectionStatus());
-    const message = error?.message || "Failed to check connection status.";
-    yield put(setToastAlert({ type: "error", message }));
+    // const message = error?.message || "Failed to check connection status.";
+    // yield put(setToastAlert({ type: "error", message }));
   }
 }
 
