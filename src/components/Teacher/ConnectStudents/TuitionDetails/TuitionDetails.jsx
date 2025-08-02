@@ -15,7 +15,9 @@ const tuitionTypeOptions = [
 
 const TuitionDetails = ({ studentDetails }) => {
   const teacherId = useMemo(() => AuthUser.getUser().id, []);
-  const { tuitionDetails } = useSelector((state) => state.connectStudents);
+  const { tuitionDetails, tuitionDetailsSubmitting } = useSelector(
+    (state) => state.connectStudents
+  );
 
   const dispatch = useDispatch();
   const formik = useFormik({
@@ -343,12 +345,19 @@ const TuitionDetails = ({ studentDetails }) => {
       <div className="pt-4">
         <button
           disabled={
-            formik.isSubmitting || formik.isValidating || tuitionDetails
+            formik.isSubmitting ||
+            formik.isValidating ||
+            tuitionDetails ||
+            tuitionDetailsSubmitting
           }
           type="submit"
           className="inline-flex justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-500 disabled:cursor-not-allowed"
         >
-          {tuitionDetails ? "Already saved!" : "Save and continue"}
+          {tuitionDetails
+            ? "Already saved!"
+            : tuitionDetailsSubmitting
+            ? "Saving..."
+            : "Save and continue"}
         </button>
       </div>
     </form>
