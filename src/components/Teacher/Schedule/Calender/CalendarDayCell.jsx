@@ -7,6 +7,7 @@ import {
   convertTo12HourFormat,
   getEventTextColor,
 } from "../../../../utils/calenderDayCellUtils";
+import SkeletonLoadingCalendarDayCell from "./SkeletonLoadingCalendarDayCell";
 
 const CalendarDayCell = ({
   currentMonth,
@@ -17,7 +18,7 @@ const CalendarDayCell = ({
   const [showModal, setShowModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  const { specificStudentEvents } = useSelector(
+  const { specificStudentEvents, specificStudentEventsLoading } = useSelector(
     (state) => state.scheduleTuitionEvents
   );
   const dispatch = useDispatch();
@@ -100,6 +101,10 @@ const CalendarDayCell = ({
   const handleMoreEvents = (events, date) => {
     setEventList({ date, events });
   };
+
+  if (specificStudentEventsLoading) {
+    return <SkeletonLoadingCalendarDayCell />;
+  }
 
   return (
     <div className="shadow-sm ring-1 ring-black/5 lg:flex lg:flex-auto lg:flex-col">
