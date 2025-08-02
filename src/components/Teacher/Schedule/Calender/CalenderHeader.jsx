@@ -177,7 +177,10 @@ const CalendarHeader = ({
         setOpen={setIsModalOpen}
         title="Add New Event"
       >
-        <TuitionEventForm selectedStudent={selectedStudent} />
+        <TuitionEventForm
+          selectedStudent={selectedStudent}
+          setIsModalOpen={setIsModalOpen}
+        />
       </ModalWrapper>
     </>
   );

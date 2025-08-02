@@ -1,7 +1,7 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import Input from "../../../common/Input";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const validationSchema = Yup.object({
   title: Yup.string().required("Title is required"),
@@ -13,14 +13,18 @@ const validationSchema = Yup.object({
   // ),
 });
 
-const TuitionEventForm = ({ selectedStudent }) => {
+const TuitionEventForm = ({ selectedStudent, setIsModalOpen }) => {
+  const { submitting } = useSelector((state) => state.scheduleTuitionEvents);
   const dispatch = useDispatch();
 
   const handleSubmit = (values) => {
-    console.log("New Event Submitted:", values);
+    // console.log("New Event Submitted:", values);
     dispatch({
       type: "SUBMIT_TUITION_EVENTS",
-      payload: values,
+      payload: {
+        ...values,
+        setIsModalOpen,
+      },
     });
     // resetForm();
   };
@@ -71,10 +75,12 @@ const TuitionEventForm = ({ selectedStudent }) => {
 
           <div className="pt-2">
             <button
+              disabled={submitting}
               type="submit"
-              className="w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+              className="w-full rounded-md bg-indigo-600 px-4 py-2 text-sm 
+              font-semibold text-white hover:bg-indigo-500 disabled:bg-gray-600 disabled:hover:bg-gray-500"
             >
-              Submit
+              {submitting ? "Submitting..." : "Submit"}
             </button>
           </div>
         </Form>
