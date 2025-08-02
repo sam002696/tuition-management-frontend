@@ -26,7 +26,7 @@ const TuitionEventList = ({ eventList }) => {
     setShowModal(true);
   };
 
-  console.log("eventList", eventList);
+  // Console log removed
   return (
     <>
       <ul
