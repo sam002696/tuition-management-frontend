@@ -3,9 +3,10 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { generateColor, getInitials } from "../../../../utils/avatarUtils";
 import { parseSubjectList } from "../../../../utils/parseSubjects";
+import ActiveStudentsSkeleton from "./ActiveStudentsSkeleton";
 
 const ActiveStudentsList = ({ selectedStudent, setSelectedStudent }) => {
-  const { activeConnections } = useSelector(
+  const { activeConnections, loading } = useSelector(
     (state) => state.scheduleTuitionEvents
   );
   const dispatch = useDispatch();
@@ -18,7 +19,9 @@ const ActiveStudentsList = ({ selectedStudent, setSelectedStudent }) => {
     setSelectedStudent(person);
   };
 
-  return (
+  return loading ? (
+    <ActiveStudentsSkeleton activeConnections={activeConnections} />
+  ) : (
     <ul
       role="list"
       className="divide-y divide-gray-100 overflow-hidden bg-white shadow-xs ring-1 ring-gray-900/5 sm:rounded-xl max-w-lg"

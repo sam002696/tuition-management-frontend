@@ -19,7 +19,7 @@ const Schedule = () => {
     }
   }, [activeConnections, selectedStudent]);
 
-  console.log("eventList", eventList);
+  // console.log("eventList", eventList);
   return (
     <TeacherLayout>
       <div className="pt-3">
