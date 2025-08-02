@@ -8,7 +8,12 @@ import {
   getEventTextColor,
 } from "../../../../utils/calenderDayCellUtils";
 
-const CalendarDayCell = ({ currentMonth, currentYear, selectedStudent }) => {
+const CalendarDayCell = ({
+  currentMonth,
+  currentYear,
+  selectedStudent,
+  setEventList,
+}) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
@@ -62,17 +67,38 @@ const CalendarDayCell = ({ currentMonth, currentYear, selectedStudent }) => {
       transformed
     );
     setDays(generatedDays);
+
+    //  Auto-set today's events
+    const today = new Date().toISOString().split("T")[0];
+    const todayEvents = transformed.find((day) => day.date === today);
+
+    if (todayEvents) {
+      setEventList({
+        date: todayEvents.date,
+        events: todayEvents.events,
+      });
+    } else {
+      setEventList({
+        date: null,
+        events: [],
+      });
+    }
   }, [
     specificStudentEvents,
     currentYear,
     currentMonth,
     selectedStudent?.student?.id,
     selectedStudent,
+    setEventList,
   ]);
 
   const handleShowEvent = (event) => {
     setSelectedEvent(event);
     setShowModal(true);
+  };
+
+  const handleMoreEvents = (events, date) => {
+    setEventList({ date, events });
   };
 
   return (
@@ -125,7 +151,10 @@ const CalendarDayCell = ({ currentMonth, currentYear, selectedStudent }) => {
                     </li>
                   ))}
                   {day.events.length > 2 && (
-                    <li className="text-gray-500">
+                    <li
+                      onClick={() => handleMoreEvents(day.events, day.date)}
+                      className="text-gray-500 cursor-pointer"
+                    >
                       + {day.events.length - 2} more
                     </li>
                   )}
@@ -163,11 +192,7 @@ const CalendarDayCell = ({ currentMonth, currentYear, selectedStudent }) => {
       </div>
 
       {showModal && selectedEvent && (
-        <ModalWrapper
-          open={showModal}
-          setOpen={setShowModal}
-          title="Tuition Session Details"
-        >
+        <ModalWrapper open={showModal} setOpen={setShowModal}>
           <EventDetailsCard selectedEvent={selectedEvent} />
         </ModalWrapper>
       )}

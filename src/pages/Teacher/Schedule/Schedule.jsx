@@ -3,11 +3,13 @@ import ActiveStudentsList from "../../../components/Teacher/Schedule/ActiveStude
 import Calender from "../../../components/Teacher/Schedule/Calender/Calender";
 import TeacherLayout from "../../../Layout/TeacherLayout/TeacherLayout";
 import { useSelector } from "react-redux";
+import TuitionEventList from "../../../components/Teacher/Schedule/TuitionEventList/TuitionEventList";
 
 const Schedule = () => {
   const { activeConnections } = useSelector(
     (state) => state.scheduleTuitionEvents
   );
+  const [eventList, setEventList] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
 
   // Automatically select the first student when list updates
@@ -16,6 +18,8 @@ const Schedule = () => {
       setSelectedStudent(activeConnections[0]);
     }
   }, [activeConnections, selectedStudent]);
+
+  console.log("eventList", eventList);
   return (
     <TeacherLayout>
       <div className="pt-3">
@@ -26,15 +30,22 @@ const Schedule = () => {
 
         <div className="mt-10 flex flex-col lg:flex-row gap-6 items-start">
           {/* Active students list */}
-          <ActiveStudentsList
-            selectedStudent={selectedStudent}
-            setSelectedStudent={setSelectedStudent}
-          />
+          <div className="flex flex-col">
+            <ActiveStudentsList
+              selectedStudent={selectedStudent}
+              setSelectedStudent={setSelectedStudent}
+            />
+
+            <TuitionEventList eventList={eventList} />
+          </div>
 
           <div className="flex-1">
             {/* Calender */}
 
-            <Calender selectedStudent={selectedStudent} />
+            <Calender
+              selectedStudent={selectedStudent}
+              setEventList={setEventList}
+            />
           </div>
         </div>
       </div>
