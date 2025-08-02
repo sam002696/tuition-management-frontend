@@ -40,10 +40,12 @@ function* submitTuitionEventsSaga(action) {
   try {
     yield put(submitTuitionEventsStart());
 
+    const { setIsModalOpen, ...submitPayload } = action.payload;
+
     const response = yield call(() =>
       fetcher(SCHEDULE_API.CREATE_TUITION_EVENT, {
         method: "POST",
-        body: action.payload,
+        body: submitPayload,
       })
     );
 
@@ -60,6 +62,11 @@ function* submitTuitionEventsSaga(action) {
       type: "FETCH_SPECIFIC_STUDENT_EVENTS",
       payload: { student_id: action.payload.student_id },
     });
+
+    // closing the modal
+    if (typeof setIsModalOpen === "function") {
+      yield call(setIsModalOpen, false);
+    }
   } catch (error) {
     const message = error.message || "Failed to submit tuition details.";
     yield put(submitTuitionEventsFailure(message));
