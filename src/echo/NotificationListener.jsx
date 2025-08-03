@@ -6,6 +6,7 @@ import echo from "./echo";
 // import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setToastAlert } from "../slices/error/errorSlice";
+import { addNotification } from "../slices/Notification/notificationSlice";
 // import { toast } from "react-toastify"; // or your own component
 
 const NotificationListener = () => {
@@ -19,6 +20,7 @@ const NotificationListener = () => {
 
     channel.notification((notification) => {
       console.log("New Notification:", notification);
+      dispatch(addNotification(notification));
 
       // dispatching toast alert
       dispatch(setToastAlert({ type: "info", message: notification?.body }));
