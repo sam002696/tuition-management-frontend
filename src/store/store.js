@@ -9,6 +9,7 @@ import toastAlertReducer from "../slices/error/errorSlice";
 import studentManagementReducer from "../slices/Teacher/StudentManagement/studentManagementSlice";
 import connectStudentsReducer from "../slices/Teacher/ConnectStudents/connectStudentSlice";
 import scheduleTuitionEventsReducer from "../slices/Teacher/Schedule/scheduleTuitionEventsSlice";
+import notificationsReducer from "../slices/Notification/notificationSlice";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -20,6 +21,7 @@ export const store = configureStore({
     studentManagement: studentManagementReducer,
     connectStudents: connectStudentsReducer,
     scheduleTuitionEvents: scheduleTuitionEventsReducer,
+    notifications: notificationsReducer,
   },
 
   middleware: (getDefaultMiddleware) =>
