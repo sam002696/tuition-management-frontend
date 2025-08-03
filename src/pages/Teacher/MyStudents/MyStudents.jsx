@@ -23,7 +23,7 @@ const tabItems = [
 ];
 
 const MyStudents = () => {
-  const { connectionRequests, pagination } = useSelector(
+  const { connectionRequests, pagination, loading } = useSelector(
     (state) => state.studentManagement
   );
   const dispatch = useDispatch();
@@ -80,17 +80,26 @@ const MyStudents = () => {
           <div className="mt-4">
             {currentTab === "Active students" && (
               <>
-                <ActiveStudents connectionRequests={connectionRequests} />
+                <ActiveStudents
+                  connectionRequests={connectionRequests}
+                  loading={loading}
+                />
               </>
             )}
             {currentTab === "Pending students" && (
               <>
-                <PendingStudents connectionRequests={connectionRequests} />
+                <PendingStudents
+                  connectionRequests={connectionRequests}
+                  loading={loading}
+                />
               </>
             )}
             {currentTab === "Past students" && (
               <>
-                <PastStudents connectionRequests={connectionRequests} />
+                <PastStudents
+                  connectionRequests={connectionRequests}
+                  loading={loading}
+                />
               </>
             )}
           </div>

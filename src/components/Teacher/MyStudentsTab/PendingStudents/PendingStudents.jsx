@@ -8,7 +8,7 @@ import { useState } from "react";
 import ModalWrapper from "../../../common/ModalWrapper";
 import StudentDetails from "../../../common/StudentDetails";
 
-const PendingStudents = ({ connectionRequests }) => {
+const PendingStudents = ({ connectionRequests, loading }) => {
   const data = connectionRequests || [];
 
   const [open, setOpen] = useState(false);
@@ -98,7 +98,7 @@ const PendingStudents = ({ connectionRequests }) => {
   ];
   return (
     <>
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={data} loading={loading} />
       <ModalWrapper open={open} setOpen={setOpen}>
         {selectedStudent && <StudentDetails data={selectedStudent} />}
       </ModalWrapper>
