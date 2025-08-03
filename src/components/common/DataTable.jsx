@@ -1,4 +1,6 @@
-const DataTable = ({ columns, data }) => {
+import SkeletonTableRows from "./SkeletonTableRows";
+
+const DataTable = ({ columns, data, loading }) => {
   return (
     <div className="mt-8 flow-root">
       <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -21,22 +23,26 @@ const DataTable = ({ columns, data }) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {data.map((item, idx) => (
-                  <tr key={idx}>
-                    {columns.map((col) => (
-                      <td
-                        key={col.key}
-                        className={`px-3 py-4 text-sm whitespace-nowrap ${
-                          col.alignRight
-                            ? "text-right text-gray-900"
-                            : "text-gray-500"
-                        }`}
-                      >
-                        {col.render ? col.render(item) : item[col.key]}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
+                {loading ? (
+                  <SkeletonTableRows columns={columns} rowCount={6} />
+                ) : (
+                  data.map((item, idx) => (
+                    <tr key={idx}>
+                      {columns.map((col) => (
+                        <td
+                          key={col.key}
+                          className={`px-3 py-4 text-sm whitespace-nowrap ${
+                            col.alignRight
+                              ? "text-right text-gray-900"
+                              : "text-gray-500"
+                          }`}
+                        >
+                          {col.render ? col.render(item) : item[col.key]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
