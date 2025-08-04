@@ -7,12 +7,15 @@ import { Transition } from "@headlessui/react";
 
 import { AuthUser } from "../../helpers/AuthUser";
 import { getIconByType, getType } from "../../utils/notificationUtils";
+import NotificationSkeleton from "../common/NotificationSkeleton";
 
 const NotificationsButton = () => {
   const user = AuthUser.getUser();
   const dispatch = useDispatch();
 
-  const { items: notifications } = useSelector((state) => state?.notifications);
+  const { items: notifications, loading } = useSelector(
+    (state) => state?.notifications
+  );
 
   useEffect(() => {
     dispatch({ type: "FETCH_NOTIFICATIONS", payload: { id: user?.id } });
@@ -26,7 +29,11 @@ const NotificationsButton = () => {
         <div>
           <MenuButton className="inline-flex w-full justify-center gap-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-gray-300 hover:bg-gray-50 focus:outline-none">
             Notifications
-            <span className="text-red-600">({notifications.length})</span>
+            {loading ? null : (
+              <>
+                <span className="text-red-600">({notifications.length})</span>
+              </>
+            )}
             <ChevronDownIcon
               className="h-5 w-5 text-gray-400"
               aria-hidden="true"
@@ -44,7 +51,11 @@ const NotificationsButton = () => {
           leaveTo="opacity-0 scale-95"
         >
           <MenuItems className="absolute right-0 z-10 mt-2 w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none  max-h-96 overflow-y-scroll scrollbar-hidden cursor-pointer">
-            {notifications.length === 0 ? (
+            {loading ? (
+              Array.from({ length: 4 }).map((_, index) => (
+                <NotificationSkeleton key={index} />
+              ))
+            ) : notifications.length === 0 ? (
               <div className="text-sm text-gray-500 px-4 py-2">
                 No notifications
               </div>
@@ -69,10 +80,9 @@ const NotificationsButton = () => {
                             dateStyle: "medium",
                             timeStyle: "short",
                           }
-                        )}{" "}
+                        )}
                       </p>
                     </div>
-
                     <p className="mt-1 text-xs text-gray-500">
                       {notification?.data?.body}
                     </p>
