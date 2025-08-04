@@ -23,7 +23,9 @@ const NotificationListener = () => {
       dispatch(addNotification(notification));
 
       // dispatching toast alert
-      dispatch(setToastAlert({ type: "info", message: notification?.body }));
+      dispatch(
+        setToastAlert({ type: "info", message: notification?.data?.body })
+      );
     });
 
     return () => {
