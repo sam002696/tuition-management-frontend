@@ -4,8 +4,9 @@ import { useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Transition } from "@headlessui/react";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
+
 import { AuthUser } from "../../helpers/AuthUser";
+import { getIconByType, getType } from "../../utils/notificationUtils";
 
 const NotificationsButton = () => {
   const user = AuthUser.getUser();
@@ -42,7 +43,7 @@ const NotificationsButton = () => {
           leaveFrom="opacity-100 scale-100"
           leaveTo="opacity-0 scale-95"
         >
-          <MenuItems className="absolute right-0 z-10 mt-2 w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none p-2 space-y-2 max-h-96 overflow-y-auto">
+          <MenuItems className="absolute right-0 z-10 mt-2 w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none  max-h-96 overflow-y-scroll scrollbar-hidden cursor-pointer">
             {notifications.length === 0 ? (
               <div className="text-sm text-gray-500 px-4 py-2">
                 No notifications
@@ -51,32 +52,31 @@ const NotificationsButton = () => {
               notifications.map((notification) => (
                 <div
                   key={notification?.id}
-                  className="flex w-full items-start rounded-lg bg-white p-4 shadow ring-1 ring-black/5"
+                  className="flex w-full items-start hover:bg-gray-50 bg-white p-4 shadow ring-1 ring-black/5"
                 >
                   <div className="shrink-0">
-                    <CheckCircleIcon
-                      className="h-6 w-6 text-green-400"
-                      aria-hidden="true"
-                    />
+                    {getIconByType(notification?.type)}
                   </div>
                   <div className="ml-3 flex-1">
-                    <p className="text-sm text-gray-900">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-gray-900 font-semibold">
+                        {getType(notification?.type)}
+                      </p>
+                      <p className="text-xs text-gray-700">
+                        {new Date(notification?.created_at).toLocaleString(
+                          "en-US",
+                          {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          }
+                        )}{" "}
+                      </p>
+                    </div>
+
+                    <p className="mt-1 text-xs text-gray-500">
                       {notification?.data?.body}
                     </p>
-                    <p className="mt-1 text-xs text-gray-500">
-                      {notification?.created_at}
-                    </p>
                   </div>
-                  {/* Optional close button */}
-                  {/* <div className="ml-4 flex-shrink-0">
-      <button
-        onClick={() => removeNotification(notification.id)}
-        className="text-gray-400 hover:text-gray-500 focus:outline-none"
-      >
-        <span className="sr-only">Close</span>
-        <XMarkIcon className="h-5 w-5" aria-hidden="true" />
-      </button>
-    </div> */}
                 </div>
               ))
             )}
