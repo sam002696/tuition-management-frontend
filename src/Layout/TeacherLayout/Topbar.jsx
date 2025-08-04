@@ -1,8 +1,9 @@
 import { Bars3Icon } from "@heroicons/react/24/outline";
-import { BellIcon } from "@heroicons/react/20/solid";
+// import { BellIcon } from "@heroicons/react/20/solid";
 // import NotificationsButton from "../../components/Teacher/NotificationsButton";
 // import UserMenu from "../../components/Teacher/UserMenu";
 import DateTime from "../../components/Teacher/DateTime";
+import NotificationsButton from "../../components/Teacher/NotificationsButton";
 
 export default function Topbar({ onSidebarToggle }) {
   return (
@@ -30,14 +31,14 @@ export default function Topbar({ onSidebarToggle }) {
 
       {/* Right Section */}
       <div className="flex items-center gap-x-4 lg:gap-x-6 ">
-        <button
+        {/* <button
           type="button"
           className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
         >
           <span className="sr-only">View notifications</span>
           <BellIcon aria-hidden="true" className="size-6" />
-        </button>
-        {/* <NotificationsButton /> */}
+        </button> */}
+        <NotificationsButton />
         <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" />
         {/* <UserMenu /> */}
         <DateTime />

@@ -3,13 +3,9 @@ import StudentSearchBar from "../../../components/Teacher/ConnectStudents/Search
 import StudentDetailsCard from "../../../components/Teacher/ConnectStudents/StudentDetails/StudentDetailsCard";
 import TuitionDetails from "../../../components/Teacher/ConnectStudents/TuitionDetails/TuitionDetails";
 import TeacherLayout from "../../../Layout/TeacherLayout/TeacherLayout";
-import StudentDetailsCardSkeleton from "../../../components/Teacher/ConnectStudents/StudentDetails/StudentDetailsCardSkeleton";
-import TuitionDetailsSkeleton from "../../../components/Teacher/ConnectStudents/TuitionDetails/TuitionDetailsSkeleton";
 
 const ConnectStudents = () => {
-  const { studentDetails, loading } = useSelector(
-    (state) => state.connectStudents
-  );
+  const { studentDetails } = useSelector((state) => state.connectStudents);
 
   return (
     <TeacherLayout>
@@ -25,21 +21,14 @@ const ConnectStudents = () => {
 
         <div className="mt-6 flex flex-col lg:flex-row gap-6 items-start">
           {/* Student Card  */}
-          {loading ? (
-            <>
-              <StudentDetailsCardSkeleton />
-              <div className="flex-1">
-                <TuitionDetailsSkeleton />
-              </div>
-            </>
-          ) : studentDetails !== null ? (
+          {studentDetails && (
             <>
               <StudentDetailsCard studentDetails={studentDetails} />
               <div className="flex-1">
                 <TuitionDetails studentDetails={studentDetails} />
               </div>
             </>
-          ) : null}
+          )}
         </div>
       </div>
     </TeacherLayout>

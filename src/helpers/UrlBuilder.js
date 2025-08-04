@@ -5,5 +5,8 @@ class UrlBuilderHelper {
     // return `http://localhost:8080/api`; // docker connection
     // return `http://43.204.236.19:8080/api`; // live connection
   }
+  tuitionManagementBroadcastingApi() {
+    return `http://localhost:8000/broadcasting/auth`; // local broadcasting auth
+  }
 }
 export const UrlBuilder = new UrlBuilderHelper();
