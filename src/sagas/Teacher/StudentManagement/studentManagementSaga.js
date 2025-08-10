@@ -1,4 +1,14 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+// sagas/studentManagementSaga.js
+import {
+  call,
+  put,
+  takeLatest,
+  all,
+  take,
+  fork,
+  cancel,
+  delay,
+} from "redux-saga/effects";
 import {
   fetchConnectionRequestsStart,
   fetchConnectionRequestsSuccess,
@@ -9,7 +19,6 @@ import {
   countConnectionsSuccess,
 } from "../../../slices/Teacher/StudentManagement/studentManagementSlice";
 import { setToastAlert } from "../../../slices/error/errorSlice";
-
 import { STUDENT_MANAGEMENT_API } from "../../../utils/api";
 import fetcher from "../../../services/fetcher";
 
@@ -19,7 +28,6 @@ function* fetchConnectionRequestsSaga(action) {
     yield put(fetchConnectionRequestsStart());
 
     const { filters = {} } = action.payload || {};
-
     const queryParams = new URLSearchParams(filters).toString();
 
     const response = yield call(() =>
@@ -29,7 +37,6 @@ function* fetchConnectionRequestsSaga(action) {
     );
 
     const { requests, pagination } = response.data;
-
     yield put(fetchConnectionRequestsSuccess({ requests, pagination }));
   } catch (error) {
     const message = error.message || "Something went wrong.";
@@ -64,7 +71,6 @@ function* disconnectStudentSaga(action) {
 }
 
 // worker saga to count the connections
-
 function* countConnectionsSaga() {
   try {
     const response = yield call(() =>
@@ -80,9 +86,46 @@ function* countConnectionsSaga() {
   }
 }
 
-// Watcher Saga
+/**
+ * Cancellable debounced search watcher.
+ * - Debounces FETCH_CONNECTION_REQUESTS_SEARCH by 400ms
+ * - Cancels the pending debounce if CANCEL_SEARCH is dispatched
+ */
+function* debouncedSearchWatcher() {
+  let task;
+  while (true) {
+    const action = yield take([
+      "FETCH_CONNECTION_REQUESTS_SEARCH",
+      "CANCEL_SEARCH",
+    ]);
+
+    // Cancel any pending debounce task
+    if (task) {
+      yield cancel(task);
+      task = null;
+    }
+
+    // Start a new debounce only for SEARCH actions
+    if (action.type === "FETCH_CONNECTION_REQUESTS_SEARCH") {
+      task = yield fork(function* () {
+        yield delay(400);
+        yield call(fetchConnectionRequestsSaga, action);
+      });
+    }
+  }
+}
+
+// Root watcher — starting ALL watchers concurrently
 export default function* studentManagementSaga() {
-  yield takeLatest("FETCH_CONNECTION_REQUESTS", fetchConnectionRequestsSaga);
-  yield takeLatest("DISCONNECT_STUDENT", disconnectStudentSaga);
-  yield takeLatest("CONNECTION_COUNT", countConnectionsSaga);
+  yield all([
+    // Instant fetches (tab change, pagination, initial load)
+    takeLatest("FETCH_CONNECTION_REQUESTS", fetchConnectionRequestsSaga),
+
+    // Debounced + cancellable search
+    debouncedSearchWatcher(),
+
+    // Other flows
+    takeLatest("DISCONNECT_STUDENT", disconnectStudentSaga),
+    takeLatest("CONNECTION_COUNT", countConnectionsSaga),
+  ]);
 }

@@ -48,7 +48,8 @@ export default function StudentDetailsCard({ studentDetails }) {
     dispatch({
       type: "SEND_CONNECTION_REQUEST",
       payload: {
-        custom_id: studentDetails.custom_id,
+        student_id: studentDetails?.id,
+        custom_id: studentDetails?.custom_id,
         tuition_details_id: tuitionDetails?.id,
       },
     });
