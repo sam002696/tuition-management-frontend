@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   loading: false,
   activeConnections: [],
+  pagination: {},
   error: null,
 
   submitting: false,
@@ -24,7 +25,8 @@ const scheduleTuitionEventsSlice = createSlice({
     },
     fetchActiveConnectionsStudentsSuccess(state, action) {
       state.loading = false;
-      state.activeConnections = action.payload;
+      state.activeConnections = action.payload?.requests;
+      state.pagination = action.payload?.pagination;
     },
     fetchActiveConnectionsStudentsFailure(state, action) {
       state.loading = false;
