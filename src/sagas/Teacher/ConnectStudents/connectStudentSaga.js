@@ -116,7 +116,7 @@ function* fetchTuitionDetailsSaga(action) {
 // worker saga to make connection request to a student
 function* sendConnectionRequestSaga(action) {
   try {
-    const { custom_id, tuition_details_id } = action.payload;
+    const { student_id, custom_id, tuition_details_id } = action.payload;
 
     yield put(sendConnectionRequestStart());
 
@@ -138,6 +138,9 @@ function* sendConnectionRequestSaga(action) {
     );
 
     yield put(sendConnectionRequestSuccess());
+
+    // fetching connection status saga
+    yield call(checkConnectionStatusSaga, { payload: { student_id } });
   } catch (error) {
     const message = error?.message || "Failed to send connection request.";
     yield put(sendConnectionRequestFailure());
