@@ -46,11 +46,11 @@ const ActiveStudentsList = ({ selectedStudent, setSelectedStudent }) => {
             ) : (
               <span
                 className={`inline-flex size-12 items-center justify-center rounded-full ${generateColor(
-                  person.student.name
+                  person?.student?.name
                 )}`}
               >
                 <span className="font-medium text-white">
-                  {getInitials(person.student.name)}
+                  {getInitials(person?.student?.name)}
                 </span>
               </span>
             )}
