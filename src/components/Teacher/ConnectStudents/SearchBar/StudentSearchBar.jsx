@@ -3,9 +3,10 @@ import { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import Input from "../../../common/Input";
 import Button from "../../../common/Button";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const StudentSearchBar = () => {
+  const { loading } = useSelector((state) => state.connectStudents);
   const dispatch = useDispatch();
   const [studentId, setStudentId] = useState("");
   const [error, setError] = useState("");
@@ -40,7 +41,13 @@ const StudentSearchBar = () => {
           />
         </div>
         <div className="w-[180px] pt-2.5">
-          <Button type="submit" icon={MagnifyingGlassIcon} iconPosition="left">
+          <Button
+            isDisabled={loading || !studentId}
+            type="submit"
+            icon={MagnifyingGlassIcon}
+            iconPosition="left"
+            isLoading={loading}
+          >
             Search
           </Button>
         </div>

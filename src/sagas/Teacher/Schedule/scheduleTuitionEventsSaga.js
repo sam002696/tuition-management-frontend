@@ -1,9 +1,19 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+// sagas/Teacher/Schedule/scheduleTuitionEventsSaga.js
+import {
+  call,
+  put,
+  takeLatest,
+  all,
+  take,
+  fork,
+  cancel,
+  delay,
+} from "redux-saga/effects";
 
 import { setToastAlert } from "../../../slices/error/errorSlice";
-
 import { SCHEDULE_API } from "../../../utils/api";
 import fetcher from "../../../services/fetcher";
+
 import {
   fetchActiveConnectionsStudentsFailure,
   fetchActiveConnectionsStudentsStart,
@@ -16,26 +26,67 @@ import {
   submitTuitionEventsSuccess,
 } from "../../../slices/Teacher/Schedule/scheduleTuitionEventsSlice";
 
-// Worker Saga with dynamic filtering
-function* fetchActiveConnectionsStudentSaga() {
+// Active connections (supports per_page, page, search)
+function* fetchActiveConnectionsStudentSaga(action) {
   try {
     yield put(fetchActiveConnectionsStudentsStart());
 
-    const response = yield call(() =>
-      fetcher(SCHEDULE_API.ACTIVE_CONNECTED_STUDENTS, {
-        method: "GET",
-      })
-    );
+    const { filters = {} } = action.payload || {};
+    const per_page = filters.per_page ?? 5;
+    const page = filters.page ?? 1;
+    const search = (filters.search ?? "").toString().trim();
 
-    yield put(fetchActiveConnectionsStudentsSuccess(response.data.requests));
+    const params = new URLSearchParams({
+      per_page: String(per_page),
+      page: String(page),
+    });
+    if (search) params.set("search", search);
+
+    const url = `${
+      SCHEDULE_API.ACTIVE_CONNECTED_STUDENTS
+    }?${params.toString()}`;
+
+    const response = yield call(() => fetcher(url, { method: "GET" }));
+
+    const { requests, pagination } = response.data;
+
+    yield put(fetchActiveConnectionsStudentsSuccess({ requests, pagination }));
   } catch (error) {
-    const message = error.message || "Failed to disconnect student.";
+    const message = error?.message || "Failed to fetch active students.";
     yield put(fetchActiveConnectionsStudentsFailure(message));
     yield put(setToastAlert({ type: "error", message }));
   }
 }
 
-// worker Saga for submitting tuition events
+/**
+ * Debounced (and cancellable) search watcher for active students.
+ * - Debounces FETCH_ACTIVE_CONNECTION_STUDENTS_SEARCH by 400ms
+ * - Cancels pending debounce when CANCEL_ACTIVE_STUDENTS_SEARCH arrives
+ */
+function* debouncedActiveStudentsSearchWatcher() {
+  let task;
+  while (true) {
+    const action = yield take([
+      "FETCH_ACTIVE_CONNECTION_STUDENTS_SEARCH",
+      "CANCEL_ACTIVE_STUDENTS_SEARCH",
+    ]);
+
+    // cancel any pending debounce task
+    if (task) {
+      yield cancel(task);
+      task = null;
+    }
+
+    if (action.type === "FETCH_ACTIVE_CONNECTION_STUDENTS_SEARCH") {
+      task = yield fork(function* () {
+        yield delay(400);
+        yield call(fetchActiveConnectionsStudentSaga, action);
+      });
+    }
+  }
+}
+
+// ---- Submit tuition events
 function* submitTuitionEventsSaga(action) {
   try {
     yield put(submitTuitionEventsStart());
@@ -53,29 +104,27 @@ function* submitTuitionEventsSaga(action) {
     yield put(
       setToastAlert({
         type: "success",
-        message: response.message || "Tuition events submitted successfully.",
+        message: response?.message || "Tuition events submitted successfully.",
       })
     );
 
-    // call fetchSpecificStudentEventsSaga
+    // refresh events list for that student
     yield put({
       type: "FETCH_SPECIFIC_STUDENT_EVENTS",
       payload: { student_id: action.payload.student_id },
     });
 
-    // closing the modal
     if (typeof setIsModalOpen === "function") {
       yield call(setIsModalOpen, false);
     }
   } catch (error) {
-    const message = error.message || "Failed to submit tuition details.";
+    const message = error?.message || "Failed to submit tuition details.";
     yield put(submitTuitionEventsFailure(message));
     yield put(setToastAlert({ type: "error", message }));
   }
 }
 
-// worker saga for fetching events for specific student teacher
-
+// ---- Fetch events for a specific student
 function* fetchSpecificStudentEventsSaga(action) {
   try {
     yield put(fetchSpecificStudentEventsStart());
@@ -85,29 +134,32 @@ function* fetchSpecificStudentEventsSaga(action) {
         SCHEDULE_API.FETCH_SPECIFIC_TEACHER_STUDENT_EVENTS(
           action.payload.student_id
         ),
-        {
-          method: "GET",
-        }
+        { method: "GET" }
       )
     );
 
     yield put(fetchSpecificStudentEventsSuccess(response.data.events));
   } catch (error) {
-    const message = error.message || "Failed to fetch events.";
+    const message = error?.message || "Failed to fetch events.";
     yield put(fetchSpecificStudentEventsFailure(message));
     yield put(setToastAlert({ type: "error", message }));
   }
 }
 
-// Watcher Saga
+//  Root saga: running all watchers concurrently
 export default function* scheduleTuitionEventsSaga() {
-  yield takeLatest(
-    "FETCH_ACTIVE_CONNECTION_STUDENTS",
-    fetchActiveConnectionsStudentSaga
-  );
-  yield takeLatest("SUBMIT_TUITION_EVENTS", submitTuitionEventsSaga);
-  yield takeLatest(
-    "FETCH_SPECIFIC_STUDENT_EVENTS",
-    fetchSpecificStudentEventsSaga
-  );
+  yield all([
+    // Instant loads (initial, pagination)
+    takeLatest(
+      "FETCH_ACTIVE_CONNECTION_STUDENTS",
+      fetchActiveConnectionsStudentSaga
+    ),
+
+    // Debounced search (cancellable)
+    debouncedActiveStudentsSearchWatcher(),
+
+    // Other flows
+    takeLatest("SUBMIT_TUITION_EVENTS", submitTuitionEventsSaga),
+    takeLatest("FETCH_SPECIFIC_STUDENT_EVENTS", fetchSpecificStudentEventsSaga),
+  ]);
 }
