@@ -1,25 +1,24 @@
 // pages/Teacher/MyStudents/MyStudents.jsx
 import { useEffect, useState } from "react";
 import Tabs from "../../../components/common/Tabs";
-import ActiveStudents from "../../../components/Teacher/MyStudentsTab/ActiveStudents/ActiveStudents";
-import PendingStudents from "../../../components/Teacher/MyStudentsTab/PendingStudents/PendingStudents";
-
 import {
   UserGroupIcon,
   ClockIcon,
   ArchiveBoxIcon,
 } from "@heroicons/react/20/solid";
-import StudentFilterBar from "../../../components/Teacher/MyStudentsTab/FilterBar/StudentFilterBar";
-import StatCard from "../../../components/Teacher/MyStudentsTab/StatCard/StatCard";
+import StatCard from "../../../components/Student/MyTeachersTab/StatCard/StatCard";
 import Pagination from "../../../components/common/Pagination";
-import PastStudents from "../../../components/Teacher/MyStudentsTab/PastStudents/PastStudents";
 import { useDispatch, useSelector } from "react-redux";
 import StudentLayout from "../../../Layout/StudentLayout/StudentLayout";
+import TeacherFilterBar from "../../../components/Student/MyTeachersTab/FilterBar/TeacherFilterBar";
+import ActiveTeachers from "../../../components/Student/MyTeachersTab/ActiveTeachers/ActiveTeachers";
+import PendingTeachers from "../../../components/Student/MyTeachersTab/PendingTeachers/PendingTeachers";
+import PastTeachers from "../../../components/Student/MyTeachersTab/PastTeachers/PastTeachers";
 
 const tabItems = [
-  { name: "Active students", href: "#", icon: UserGroupIcon },
-  { name: "Pending students", href: "#", icon: ClockIcon },
-  { name: "Past students", href: "#", icon: ArchiveBoxIcon },
+  { name: "Active teachers", href: "#", icon: UserGroupIcon },
+  { name: "Pending teachers", href: "#", icon: ClockIcon },
+  { name: "Past teachers", href: "#", icon: ArchiveBoxIcon },
 ];
 
 const MyTeachers = () => {
@@ -27,7 +26,7 @@ const MyTeachers = () => {
     (state) => state.studentManagement
   );
   const dispatch = useDispatch();
-  const [currentTab, setCurrentTab] = useState("Active students");
+  const [currentTab, setCurrentTab] = useState("Active teachers");
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDept, setSelectedDept] = useState("All Departments");
@@ -39,11 +38,11 @@ const MyTeachers = () => {
   useEffect(() => {
     let filters = { per_page: 10 }; // default pagination
 
-    if (currentTab === "Active students") {
+    if (currentTab === "Active teachers") {
       filters = { ...filters, status: "accepted", is_active: true };
-    } else if (currentTab === "Pending students") {
+    } else if (currentTab === "Pending teachers") {
       filters = { ...filters, status: "pending" };
-    } else if (currentTab === "Past students") {
+    } else if (currentTab === "Past teachers") {
       filters = { ...filters, status: "accepted", is_active: false };
     }
 
@@ -69,7 +68,7 @@ const MyTeachers = () => {
         />
 
         <div className="mt-6">
-          <StudentFilterBar
+          <TeacherFilterBar
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
             selectedDept={selectedDept}
@@ -78,25 +77,25 @@ const MyTeachers = () => {
           />
 
           <div className="mt-4">
-            {currentTab === "Active students" && (
+            {currentTab === "Active teachers" && (
               <>
-                <ActiveStudents
+                <ActiveTeachers
                   connectionRequests={connectionRequests}
                   loading={loading}
                 />
               </>
             )}
-            {currentTab === "Pending students" && (
+            {currentTab === "Pending teachers" && (
               <>
-                <PendingStudents
+                <PendingTeachers
                   connectionRequests={connectionRequests}
                   loading={loading}
                 />
               </>
             )}
-            {currentTab === "Past students" && (
+            {currentTab === "Past teachers" && (
               <>
-                <PastStudents
+                <PastTeachers
                   connectionRequests={connectionRequests}
                   loading={loading}
                 />
@@ -115,11 +114,11 @@ const MyTeachers = () => {
             onPageChange={(page) => {
               let filters = { per_page: 10, page };
 
-              if (currentTab === "Active students") {
+              if (currentTab === "Active teachers") {
                 filters = { ...filters, status: "accepted", is_active: true };
-              } else if (currentTab === "Pending students") {
+              } else if (currentTab === "Pending teachers") {
                 filters = { ...filters, status: "pending" };
-              } else if (currentTab === "Past students") {
+              } else if (currentTab === "Past teachers") {
                 filters = { ...filters, status: "accepted", is_active: false };
               }
 
