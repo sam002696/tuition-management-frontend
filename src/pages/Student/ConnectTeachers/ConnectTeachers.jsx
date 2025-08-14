@@ -3,6 +3,7 @@ import StudentSearchBar from "../../../components/Teacher/ConnectStudents/Search
 import StudentDetailsCard from "../../../components/Teacher/ConnectStudents/StudentDetails/StudentDetailsCard";
 import TuitionDetails from "../../../components/Teacher/ConnectStudents/TuitionDetails/TuitionDetails";
 import StudentLayout from "../../../Layout/StudentLayout/StudentLayout";
+import TeacherDetailsCard from "../../../components/Student/ConnectTeachers/TeacherDetails/TeacherDetailsCard";
 
 const ConnectStudents = () => {
   const { studentDetails } = useSelector((state) => state.connectStudents);
@@ -11,13 +12,14 @@ const ConnectStudents = () => {
     <StudentLayout>
       <div className="pt-3">
         <h1 className="text-2xl font-semibold text-gray-900 mb-1">
-          Connect with Students
+          Connect with Teachers
         </h1>
         <p className="text-gray-600 mb-6">
-          Search for students by their ID and send connection requests
+          Accept connection requests sent by the teachers viewing details
         </p>
 
-        <StudentSearchBar />
+        {/* <StudentSearchBar /> */}
+        <TeacherDetailsCard />
 
         <div className="mt-6 flex flex-col lg:flex-row gap-6 items-start">
           {/* Student Card  */}
