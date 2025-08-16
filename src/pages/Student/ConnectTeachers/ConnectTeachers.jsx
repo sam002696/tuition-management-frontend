@@ -12,10 +12,10 @@ const ConnectStudents = () => {
     <StudentLayout>
       <div className="pt-3">
         <h1 className="text-2xl font-semibold text-gray-900 mb-1">
-          Connect with Teachers
+          Connection Requests
         </h1>
         <p className="text-gray-600 mb-6">
-          Accept connection requests sent by the teachers viewing details
+          Review and respond to tuition requests from teachers
         </p>
 
         {/* <StudentSearchBar /> */}
