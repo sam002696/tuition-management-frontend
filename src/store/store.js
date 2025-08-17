@@ -8,6 +8,7 @@ import toastAlertReducer from "../slices/error/errorSlice";
 
 import studentManagementReducer from "../slices/Teacher/StudentManagement/studentManagementSlice";
 import connectStudentsReducer from "../slices/Teacher/ConnectStudents/connectStudentSlice";
+import connectTeachersReducer from "../slices/Student/ConnectTeachers/connectTeacherSlice";
 import scheduleTuitionEventsReducer from "../slices/Teacher/Schedule/scheduleTuitionEventsSlice";
 import notificationsReducer from "../slices/Notification/notificationSlice";
 
@@ -22,6 +23,7 @@ export const store = configureStore({
     connectStudents: connectStudentsReducer,
     scheduleTuitionEvents: scheduleTuitionEventsReducer,
     notifications: notificationsReducer,
+    connectTeachers: connectTeachersReducer,
   },
 
   middleware: (getDefaultMiddleware) =>

@@ -21,8 +21,8 @@ const ConnectStudents = () => {
         {/* <StudentSearchBar /> */}
         <TeacherDetailsCard />
 
-        <div className="mt-6 flex flex-col lg:flex-row gap-6 items-start">
-          {/* Student Card  */}
+        {/* <div className="mt-6 flex flex-col lg:flex-row gap-6 items-start">
+          
           {studentDetails && (
             <>
               <StudentDetailsCard studentDetails={studentDetails} />
@@ -31,7 +31,7 @@ const ConnectStudents = () => {
               </div>
             </>
           )}
-        </div>
+        </div> */}
       </div>
     </StudentLayout>
   );
