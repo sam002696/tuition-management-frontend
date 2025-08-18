@@ -22,7 +22,10 @@ export default function TeacherDetailsCard() {
   };
 
   const handleAccept = (id) => {
-    dispatch({ type: "ACCEPT_TEACHER_REQUEST", payload: { requestId: id } });
+    dispatch({
+      type: "ACCEPT_TEACHER_REQUEST",
+      payload: { requestId: id, status: "accepted" },
+    });
   };
 
   const handleDecline = (id) => {

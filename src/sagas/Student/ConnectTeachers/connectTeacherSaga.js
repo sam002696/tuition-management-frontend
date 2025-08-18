@@ -47,12 +47,13 @@ function* fetchRequestsSaga() {
 // Worker Saga: accept teacher request
 function* acceptRequestSaga(action) {
   try {
-    const { requestId } = action.payload;
+    const { requestId, status } = action.payload;
     yield put(acceptRequestStart());
 
     const response = yield call(() =>
       fetcher(CONNECT_TEACHER_API.ACCEPT_REQUEST(requestId), {
         method: "POST",
+        body: { status: status },
       })
     );
 
