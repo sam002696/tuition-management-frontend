@@ -6,7 +6,7 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import ModalWrapper from "../../../common/ModalWrapper";
-import StudentDetails from "../../../common/StudentDetails";
+import TeacherDetails from "../../../common/TeacherDetails";
 
 const ActiveTeachers = ({ connectionRequests, loading }) => {
   const data = connectionRequests || [];
@@ -25,25 +25,25 @@ const ActiveTeachers = ({ connectionRequests, loading }) => {
       header: "Teacher Info",
       render: (item) => (
         <div>
-          <div className="font-medium text-gray-900">{item?.student?.name}</div>
-          <div className="text-gray-500 text-sm">{item?.student?.email}</div>
+          <div className="font-medium text-gray-900">{item?.teacher?.name}</div>
+          <div className="text-gray-500 text-sm">{item?.teacher?.email}</div>
         </div>
       ),
     },
     {
       key: "custom_id",
       header: "Teacher ID",
-      render: (item) => item?.student?.custom_id,
+      render: (item) => item?.teacher?.custom_id,
     },
     {
       key: "phone",
       header: "Phone",
-      render: (item) => item?.student?.phone,
+      render: (item) => item?.teacher?.phone,
     },
     {
       key: "class_level",
-      header: "Class",
-      render: (item) => item?.tuition_details?.class_level,
+      header: "Tuition Type",
+      render: (item) => item?.tuition_details?.tuition_type,
     },
     {
       key: "status",
@@ -101,7 +101,7 @@ const ActiveTeachers = ({ connectionRequests, loading }) => {
     <>
       <DataTable columns={columns} data={data} loading={loading} />
       <ModalWrapper open={open} setOpen={setOpen}>
-        {selectedTeacher && <StudentDetails data={selectedTeacher} />}
+        {selectedTeacher && <TeacherDetails data={selectedTeacher} />}
       </ModalWrapper>
     </>
   );

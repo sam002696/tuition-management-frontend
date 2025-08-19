@@ -1,20 +1,19 @@
-// components/Teacher/MyStudentsTab/StudentFilterBar.jsx
-import { FunnelIcon } from "@heroicons/react/20/solid";
+// import { FunnelIcon } from "@heroicons/react/20/solid";
 
-const departments = [
-  "All Departments",
-  "Computer Science",
-  "Engineering",
-  "Mathematics",
-  "Business",
-];
+// const departments = [
+//   "All Departments",
+//   "Computer Science",
+//   "Engineering",
+//   "Mathematics",
+//   "Business",
+// ];
 
 const TeacherFilterBar = ({
   searchTerm,
   onSearchChange,
-  selectedDept,
-  onDeptChange,
-  onFilterClick,
+  // selectedDept,
+  // onDeptChange,
+  // onFilterClick,
 }) => {
   return (
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 px-3">
@@ -30,8 +29,8 @@ const TeacherFilterBar = ({
       </div>
 
       {/* Filter Section */}
-      <div className="flex items-center gap-3">
-        {/* Department Dropdown */}
+      {/* <div className="flex items-center gap-3">
+        
         <select
           value={selectedDept}
           onChange={(e) => onDeptChange(e.target.value)}
@@ -44,7 +43,7 @@ const TeacherFilterBar = ({
           ))}
         </select>
 
-        {/* Filter Button */}
+       
         <button
           onClick={onFilterClick}
           className="inline-flex items-center gap-1 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium shadow-sm hover:bg-gray-100"
@@ -52,7 +51,7 @@ const TeacherFilterBar = ({
           <FunnelIcon className="size-4 text-gray-600" />
           Filter
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -25,6 +25,7 @@ const MyTeachers = () => {
   const { connectionRequests, pagination, loading } = useSelector(
     (state) => state.studentManagement
   );
+  console.log("connectionRequests", connectionRequests);
   const dispatch = useDispatch();
   const [currentTab, setCurrentTab] = useState("Active teachers");
 

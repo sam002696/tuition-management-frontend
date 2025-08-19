@@ -6,7 +6,7 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import ModalWrapper from "../../../common/ModalWrapper";
-import StudentDetails from "../../../common/StudentDetails";
+import TeacherDetails from "../../../common/TeacherDetails";
 
 const PastTeachers = ({ connectionRequests, loading }) => {
   const data = connectionRequests || [];
@@ -25,25 +25,25 @@ const PastTeachers = ({ connectionRequests, loading }) => {
       header: "Teacher Info",
       render: (item) => (
         <div>
-          <div className="font-medium text-gray-900">{item?.student?.name}</div>
-          <div className="text-gray-500 text-sm">{item?.student?.email}</div>
+          <div className="font-medium text-gray-900">{item?.teacher?.name}</div>
+          <div className="text-gray-500 text-sm">{item?.teacher?.email}</div>
         </div>
       ),
     },
     {
       key: "custom_id",
       header: "Teacher ID",
-      render: (item) => item?.student?.custom_id,
+      render: (item) => item?.teacher?.custom_id,
     },
     {
       key: "phone",
       header: "Phone",
-      render: (item) => item?.student?.phone,
+      render: (item) => item?.teacher?.phone,
     },
     {
       key: "class_level",
-      header: "Class",
-      render: (item) => item?.tuition_details?.class_level,
+      header: "Tuition Type",
+      render: (item) => item?.tuition_details?.tuition_type,
     },
     {
       key: "status",
@@ -51,14 +51,14 @@ const PastTeachers = ({ connectionRequests, loading }) => {
       render: (item) => (
         <span
           className={`px-2 py-1 text-xs rounded-full ${
-            item.status === "accepted" && item.is_active === 0
-              ? "bg-red-100 text-red-800"
+            item.status === "accepted"
+              ? "bg-green-100 text-green-800"
               : item.status === "pending"
               ? "bg-yellow-100 text-yellow-800"
               : "bg-gray-100 text-gray-800"
           }`}
         >
-          disconnected
+          {item?.status}
         </span>
       ),
     },
@@ -96,11 +96,12 @@ const PastTeachers = ({ connectionRequests, loading }) => {
       ),
     },
   ];
+
   return (
     <>
       <DataTable columns={columns} data={data} loading={loading} />
       <ModalWrapper open={open} setOpen={setOpen}>
-        {selectedTeacher && <StudentDetails data={selectedTeacher} />}
+        {selectedTeacher && <TeacherDetails data={selectedTeacher} />}
       </ModalWrapper>
     </>
   );

@@ -1,6 +1,6 @@
 // sagas/Student/ConnectTeachers/connectTeacherSaga.js
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CONNECT_TEACHER_API } from "../../../utils/api/Student/ConnectTeachers";
+import { CONNECT_TEACHER_API } from "../../../utils/api";
 import fetcher from "../../../services/fetcher";
 import { setToastAlert } from "../../../slices/error/errorSlice";
 
