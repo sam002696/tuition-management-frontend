@@ -6,6 +6,7 @@ import teacherManagementSaga from "./Student/TeacherManagement/teacherManagement
 import connectStudentSaga from "./Teacher/ConnectStudents/connectStudentSaga";
 import connectTeacherSaga from "./Student/ConnectTeachers/connectTeacherSaga";
 import scheduleTuitionEventsSaga from "./Teacher/Schedule/scheduleTuitionEventsSaga";
+import scheduleTuitionEventsTeacherSaga from "./Student/Schedule/scheduleTuitionEventsTeacherSaga";
 import notificationSaga from "./Notification/notificationSaga";
 
 //  Combining all sagas
@@ -18,5 +19,6 @@ export default function* rootSaga() {
     notificationSaga(),
     connectTeacherSaga(),
     teacherManagementSaga(),
+    scheduleTuitionEventsTeacherSaga(),
   ]);
 }

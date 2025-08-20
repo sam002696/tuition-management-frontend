@@ -10,6 +10,7 @@ import studentManagementReducer from "../slices/Teacher/StudentManagement/studen
 import connectStudentsReducer from "../slices/Teacher/ConnectStudents/connectStudentSlice";
 import connectTeachersReducer from "../slices/Student/ConnectTeachers/connectTeacherSlice";
 import scheduleTuitionEventsReducer from "../slices/Teacher/Schedule/scheduleTuitionEventsSlice";
+import scheduleTuitionEventsTeacherReducer from "../slices/Student/Schedule/scheduleTuitionEventsTeacherSlice";
 import notificationsReducer from "../slices/Notification/notificationSlice";
 
 const sagaMiddleware = createSagaMiddleware();
@@ -24,6 +25,7 @@ export const store = configureStore({
     scheduleTuitionEvents: scheduleTuitionEventsReducer,
     notifications: notificationsReducer,
     connectTeachers: connectTeachersReducer,
+    scheduleTuitionEventsTeacher: scheduleTuitionEventsTeacherReducer,
   },
 
   middleware: (getDefaultMiddleware) =>

@@ -25,7 +25,7 @@ const Schedule = () => {
       <div className="pt-3">
         <h1 className="text-2xl font-semibold text-gray-900 mb-1">
           Schedule <span className="text-indigo-500">tuition events</span> for
-          students
+          teachers
         </h1>
 
         <div className="mt-10 flex flex-col lg:flex-row gap-6 items-start">
