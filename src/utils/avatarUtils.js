@@ -1,7 +1,7 @@
 // Get initials from a full name
 export const getInitials = (name) => {
   return name
-    .split(" ")
+    ?.split(" ")
     .map((part) => part[0])
     .join("")
     .slice(0, 2)
@@ -21,7 +21,7 @@ const colors = [
 ];
 export const generateColor = (name) => {
   let hash = 0;
-  for (let i = 0; i < name.length; i++) {
+  for (let i = 0; i < name?.length; i++) {
     hash = name.charCodeAt(i) + ((hash << 4) - hash);
   }
   return colors[Math.abs(hash) % colors.length];
