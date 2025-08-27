@@ -1,23 +1,25 @@
 import { useEffect, useState } from "react";
-import ActiveStudentsList from "../../../components/Teacher/Schedule/ActiveStudentsList/ActiveStudentsList";
-import Calender from "../../../components/Teacher/Schedule/Calender/Calender";
+import ActiveTeachersList from "../../../components/Student/Schedule/ActiveTeachersList/ActiveTeachersList";
+import Calender from "../../../components/Student/Schedule/Calender/Calender";
 import { useSelector } from "react-redux";
-import TuitionEventList from "../../../components/Teacher/Schedule/TuitionEventList/TuitionEventList";
+import TuitionEventList from "../../../components/Student/Schedule/TuitionEventList/TuitionEventList";
 import StudentLayout from "../../../Layout/StudentLayout/StudentLayout";
 
 const Schedule = () => {
   const { activeConnections } = useSelector(
-    (state) => state.scheduleTuitionEvents
+    (state) => state.scheduleTuitionEventsTeacher
   );
   const [eventList, setEventList] = useState(null);
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+
+  console.log("activeConnections", activeConnections);
 
   // Automatically select the first student when list updates
   useEffect(() => {
-    if (activeConnections?.length > 0 && !selectedStudent) {
-      setSelectedStudent(activeConnections[0]);
+    if (activeConnections?.length > 0 && !selectedTeacher) {
+      setSelectedTeacher(activeConnections[0]);
     }
-  }, [activeConnections, selectedStudent]);
+  }, [activeConnections, selectedTeacher]);
 
   // console.log("eventList", eventList);
   return (
@@ -31,9 +33,9 @@ const Schedule = () => {
         <div className="mt-10 flex flex-col lg:flex-row gap-6 items-start">
           {/* Active students list */}
           <div className="flex flex-col">
-            <ActiveStudentsList
-              selectedStudent={selectedStudent}
-              setSelectedStudent={setSelectedStudent}
+            <ActiveTeachersList
+              selectedTeacher={selectedTeacher}
+              setSelectedTeacher={setSelectedTeacher}
             />
 
             <TuitionEventList eventList={eventList} />
@@ -43,7 +45,7 @@ const Schedule = () => {
             {/* Calender */}
 
             <Calender
-              selectedStudent={selectedStudent}
+              selectedTeacher={selectedTeacher}
               setEventList={setEventList}
             />
           </div>

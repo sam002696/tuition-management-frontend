@@ -13,7 +13,7 @@ const CalendarHeader = ({
   currentMonth,
   currentYear,
   onChange,
-  selectedStudent,
+  selectedTeacher,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -57,10 +57,10 @@ const CalendarHeader = ({
           </time>
         </h1>
 
-        {/* Student name */}
+        {/* Teacher name */}
         <p className="font-semibold">
           <span className="text-indigo-500">
-            {selectedStudent?.student?.name}
+            {selectedTeacher?.teacher?.name}
           </span>{" "}
           Calender
         </p>
@@ -178,7 +178,7 @@ const CalendarHeader = ({
         title="Add New Event"
       >
         <TuitionEventForm
-          selectedStudent={selectedStudent}
+          selectedTeacher={selectedTeacher}
           setIsModalOpen={setIsModalOpen}
         />
       </ModalWrapper>

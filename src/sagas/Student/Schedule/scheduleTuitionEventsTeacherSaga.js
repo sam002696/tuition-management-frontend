@@ -11,7 +11,7 @@ import {
 } from "redux-saga/effects";
 
 import { setToastAlert } from "../../../slices/error/errorSlice";
-import { SCHEDULE_API } from "../../../utils/api";
+import { SCHEDULE_TEACHER_API } from "../../../utils/api";
 import fetcher from "../../../services/fetcher";
 
 import {
@@ -24,7 +24,14 @@ import {
   submitTuitionEventsFailure,
   submitTuitionEventsStart,
   submitTuitionEventsSuccess,
-} from "../../../slices/Teacher/Schedule/scheduleTuitionEventsSlice";
+  specificTeacherEventAcceptRequestStart,
+  specificTeacherEventAcceptRequestSuccess,
+  specificTeacherEventAcceptRequestFailure,
+  specificTeacherEventDeclineRequestStart,
+  specificTeacherEventDeclineRequestSuccess,
+  specificTeacherEventDeclineRequestFailure,
+} from "../../../slices/Student/Schedule/scheduleTuitionEventsTeacherSlice";
+import { AuthUser } from "../../../helpers/AuthUser";
 
 // Active connections (supports per_page, page, search)
 function* fetchActiveConnectionsTeacherSaga(action) {
@@ -43,7 +50,7 @@ function* fetchActiveConnectionsTeacherSaga(action) {
     if (search) params.set("search", search);
 
     const url = `${
-      SCHEDULE_API.ACTIVE_CONNECTED_TEACHERS
+      SCHEDULE_TEACHER_API.ACTIVE_CONNECTED_TEACHERS
     }?${params.toString()}`;
 
     const response = yield call(() => fetcher(url, { method: "GET" }));
@@ -94,7 +101,7 @@ function* submitTuitionEventsSaga(action) {
     const { setIsModalOpen, ...submitPayload } = action.payload;
 
     const response = yield call(() =>
-      fetcher(SCHEDULE_API.CREATE_TUITION_EVENT, {
+      fetcher(SCHEDULE_TEACHER_API.CREATE_TUITION_EVENT, {
         method: "POST",
         body: submitPayload,
       })
@@ -131,7 +138,7 @@ function* fetchSpecificTeacherEventsSaga(action) {
 
     const response = yield call(() =>
       fetcher(
-        SCHEDULE_API.FETCH_SPECIFIC_TEACHER_STUDENT_EVENTS(
+        SCHEDULE_TEACHER_API.FETCH_SPECIFIC_TEACHER_STUDENT_EVENTS(
           action.payload.teacher_id
         ),
         { method: "GET" }
@@ -142,6 +149,59 @@ function* fetchSpecificTeacherEventsSaga(action) {
   } catch (error) {
     const message = error?.message || "Failed to fetch events.";
     yield put(fetchSpecificTeacherEventsFailure(message));
+    yield put(setToastAlert({ type: "error", message }));
+  }
+}
+
+// Worker Saga: accept teacher request
+function* specificTeacherEventAcceptRequestSaga(action) {
+  try {
+    const { requestId, status } = action.payload;
+    yield put(specificTeacherEventAcceptRequestStart());
+
+    const response = yield call(() =>
+      fetcher(SCHEDULE_TEACHER_API.EVENT_ACCEPT_REQUEST(requestId), {
+        method: "POST",
+        body: { status: status },
+      })
+    );
+
+    yield put(specificTeacherEventAcceptRequestSuccess(requestId));
+    yield put(
+      setToastAlert({
+        type: "success",
+        message: response?.message || "Request accepted successfully.",
+      })
+    );
+  } catch (error) {
+    const message = error?.message || "Failed to accept request.";
+    yield put(specificTeacherEventAcceptRequestFailure(message));
+    yield put(setToastAlert({ type: "error", message }));
+  }
+}
+
+// Worker Saga: decline teacher request
+function* specificTeacherEventDeclineRequestSaga(action) {
+  try {
+    const { requestId } = action.payload;
+    yield put(specificTeacherEventDeclineRequestStart());
+
+    const response = yield call(() =>
+      fetcher(SCHEDULE_TEACHER_API.EVENT_DECLINE_REQUEST(requestId), {
+        method: "POST",
+      })
+    );
+
+    yield put(specificTeacherEventDeclineRequestSuccess(requestId));
+    yield put(
+      setToastAlert({
+        type: "success",
+        message: response?.message || "Request declined successfully.",
+      })
+    );
+  } catch (error) {
+    const message = error?.message || "Failed to decline request.";
+    yield put(specificTeacherEventDeclineRequestFailure(message));
     yield put(setToastAlert({ type: "error", message }));
   }
 }
@@ -161,5 +221,15 @@ export default function* scheduleTuitionEventsSaga() {
     // Other flows
     takeLatest("SUBMIT_TUITION_EVENTS", submitTuitionEventsSaga),
     takeLatest("FETCH_SPECIFIC_TEACHER_EVENTS", fetchSpecificTeacherEventsSaga),
+
+    // Event Accept Decline Flow
+    takeLatest(
+      "SPECIFIC_EVENT_ACCEPT_REQUEST",
+      specificTeacherEventAcceptRequestSaga
+    ),
+    takeLatest(
+      "SPECIFIC_EVENT_DECLINE_REQUEST",
+      specificTeacherEventDeclineRequestSaga
+    ),
   ]);
 }

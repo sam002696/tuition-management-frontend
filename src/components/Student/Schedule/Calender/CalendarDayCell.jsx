@@ -12,33 +12,33 @@ import SkeletonLoadingCalendarDayCell from "./SkeletonLoadingCalendarDayCell";
 const CalendarDayCell = ({
   currentMonth,
   currentYear,
-  selectedStudent,
+  selectedTeacher,
   setEventList,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  const { specificStudentEvents, specificStudentEventsLoading } = useSelector(
-    (state) => state.scheduleTuitionEvents
+  const { specificTeacherEvents, specificTeacherEventsLoading } = useSelector(
+    (state) => state.scheduleTuitionEventsTeacher
   );
   const dispatch = useDispatch();
   const [days, setDays] = useState([]);
 
-  // fetch specific student events
+  // fetch specific teacher events
 
   useEffect(() => {
     dispatch({
-      type: "FETCH_SPECIFIC_STUDENT_EVENTS",
+      type: "FETCH_SPECIFIC_TEACHER_EVENTS",
       payload: {
-        student_id: selectedStudent?.student?.id,
+        teacher_id: selectedTeacher?.teacher?.id,
       },
     });
-  }, [selectedStudent?.student?.id, dispatch]);
+  }, [selectedTeacher?.teacher?.id, dispatch]);
 
   // calender to generate days
 
   useEffect(() => {
-    const transformed = specificStudentEvents.reduce((acc, item) => {
+    const transformed = specificTeacherEvents?.reduce((acc, item) => {
       const date = item?.scheduled_at.split(" ")[0];
       const time = item?.scheduled_at.split(" ")[1]?.slice(0, 5);
 
@@ -48,7 +48,7 @@ const CalendarDayCell = ({
         time: convertTo12HourFormat(time),
         datetime: item?.scheduled_at.replace(" ", "T"),
         status: item?.status,
-        selectedStudent: selectedStudent,
+        selectedTeacher: selectedTeacher,
         href: "#",
       };
 
@@ -71,7 +71,7 @@ const CalendarDayCell = ({
 
     //  Auto-set today's events
     const today = new Date().toISOString().split("T")[0];
-    const todayEvents = transformed.find((day) => day.date === today);
+    const todayEvents = transformed?.find((day) => day.date === today);
 
     if (todayEvents) {
       setEventList({
@@ -85,11 +85,11 @@ const CalendarDayCell = ({
       });
     }
   }, [
-    specificStudentEvents,
+    specificTeacherEvents,
     currentYear,
     currentMonth,
-    selectedStudent?.student?.id,
-    selectedStudent,
+    selectedTeacher?.teacher?.id,
+    selectedTeacher,
     setEventList,
   ]);
 
@@ -102,7 +102,7 @@ const CalendarDayCell = ({
     setEventList({ date, events });
   };
 
-  if (specificStudentEventsLoading) {
+  if (specificTeacherEventsLoading) {
     return <SkeletonLoadingCalendarDayCell />;
   }
 

@@ -13,7 +13,7 @@ const validationSchema = Yup.object({
   // ),
 });
 
-const TuitionEventForm = ({ selectedStudent, setIsModalOpen }) => {
+const TuitionEventForm = ({ selectedTeacher, setIsModalOpen }) => {
   const { submitting } = useSelector((state) => state.scheduleTuitionEvents);
   const dispatch = useDispatch();
 
@@ -32,7 +32,7 @@ const TuitionEventForm = ({ selectedStudent, setIsModalOpen }) => {
   return (
     <Formik
       initialValues={{
-        student_id: selectedStudent?.student?.id || "",
+        teacher_id: selectedTeacher?.teacher?.id || "",
         title: "",
         description: "",
         scheduled_at: "",

@@ -3,15 +3,15 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { generateColor, getInitials } from "../../../../utils/avatarUtils";
 import { parseSubjectList } from "../../../../utils/parseSubjects";
-import ActiveStudentsSkeleton from "./ActiveStudentsSkeleton";
+import ActiveTeachersSkeleton from "./ActiveTeachersSkeleton";
 import Pagination from "../../../common/Pagination";
 import Input from "../../../common/Input";
 
 const PER_PAGE = 5;
 
-const ActiveTeachersList = ({ selectedStudent, setSelectedStudent }) => {
+const ActiveTeachersList = ({ selectedTeacher, setSelectedTeacher }) => {
   const { activeConnections, loading, pagination } = useSelector(
-    (state) => state.scheduleTuitionEvents
+    (state) => state.scheduleTuitionEventsTeacher
   );
   const dispatch = useDispatch();
 
@@ -21,7 +21,7 @@ const ActiveTeachersList = ({ selectedStudent, setSelectedStudent }) => {
   // Initial load: page 1
   useEffect(() => {
     dispatch({
-      type: "FETCH_ACTIVE_CONNECTION_STUDENTS",
+      type: "FETCH_ACTIVE_CONNECTION_TEACHERS",
       payload: { filters: { per_page: PER_PAGE, page: 1 } },
     });
   }, [dispatch]);
@@ -38,25 +38,25 @@ const ActiveTeachersList = ({ selectedStudent, setSelectedStudent }) => {
 
     if (search) {
       dispatch({
-        type: "FETCH_ACTIVE_CONNECTION_STUDENTS_SEARCH", // debounced in saga
+        type: "FETCH_ACTIVE_CONNECTION_TEACHERS_SEARCH", // debounced in saga
         payload: { filters: { per_page: PER_PAGE, page: 1, search } },
       });
     } else {
       // cleared and cancel pending debounce and refetch page 1 immediately
-      dispatch({ type: "CANCEL_ACTIVE_STUDENTS_SEARCH" });
+      dispatch({ type: "CANCEL_ACTIVE_TEACHERS_SEARCH" });
       dispatch({
-        type: "FETCH_ACTIVE_CONNECTION_STUDENTS",
+        type: "FETCH_ACTIVE_CONNECTION_TEACHERS",
         payload: { filters: { per_page: PER_PAGE, page: 1 } },
       });
     }
   }, [searchTerm, dispatch]);
 
   const handleShowCalender = (person) => {
-    setSelectedStudent(person);
+    setSelectedTeacher(person);
   };
 
   if (loading) {
-    return <ActiveStudentsSkeleton activeConnections={activeConnections} />;
+    return <ActiveTeachersSkeleton activeConnections={activeConnections} />;
   }
 
   return (
@@ -65,7 +65,7 @@ const ActiveTeachersList = ({ selectedStudent, setSelectedStudent }) => {
       <div className="-mt-3 mb-3 max-w-lg">
         <Input
           name="search"
-          placeholder="Search student by name..."
+          placeholder="Search teacher by name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -76,13 +76,13 @@ const ActiveTeachersList = ({ selectedStudent, setSelectedStudent }) => {
         {/* List */}
         <ul role="list" className="divide-y divide-gray-100">
           {(activeConnections || []).map((person) => {
-            const name = person?.student?.name ?? person?.name;
+            const name = person?.teacher?.name ?? person?.name;
             const subjects = parseSubjectList(
               person?.tuition_details?.subject_list
             );
             const displaySubjects = subjects.slice(0, 2).join(", ");
             const remainingCount = Math.max(subjects.length - 2, 0);
-            const isSelected = selectedStudent?.id === person.id;
+            const isSelected = selectedTeacher?.id === person.id;
 
             return (
               <li
@@ -93,10 +93,10 @@ const ActiveTeachersList = ({ selectedStudent, setSelectedStudent }) => {
                 } sm:px-6`}
               >
                 <div className="flex min-w-0 gap-x-4">
-                  {person?.student?.imageUrl ? (
+                  {person?.teacher?.imageUrl ? (
                     <img
                       alt={name}
-                      src={person.student.imageUrl}
+                      src={person.teacher.imageUrl}
                       className="size-12 flex-none rounded-full bg-gray-50"
                     />
                   ) : (
@@ -136,7 +136,7 @@ const ActiveTeachersList = ({ selectedStudent, setSelectedStudent }) => {
                     </p>
                     <div className="mt-1 flex items-center gap-x-1.5">
                       <p className="text-xs/5 text-gray-500">
-                        {person?.student?.phone}
+                        {person?.teacher?.phone}
                       </p>
                     </div>
                   </div>
@@ -151,7 +151,7 @@ const ActiveTeachersList = ({ selectedStudent, setSelectedStudent }) => {
 
           {(!activeConnections || activeConnections.length === 0) && (
             <li className="px-4 py-6 text-sm text-gray-500">
-              No students found.
+              No teachers found.
             </li>
           )}
         </ul>
@@ -165,7 +165,7 @@ const ActiveTeachersList = ({ selectedStudent, setSelectedStudent }) => {
           totalPages={pagination?.total_pages || 1}
           onPageChange={(page) => {
             dispatch({
-              type: "FETCH_ACTIVE_CONNECTION_STUDENTS",
+              type: "FETCH_ACTIVE_CONNECTION_TEACHERS",
               payload: {
                 filters: { per_page: PER_PAGE, page },
               },

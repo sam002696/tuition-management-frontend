@@ -13,6 +13,12 @@ const initialState = {
   specificTeacherEvents: [],
   specificTeacherEventsLoading: false,
   specificTeacherEventsError: null,
+
+  specificTeacherEventAcceptLoading: false,
+  specificTeacherEventAcceptError: null,
+
+  specificTeacherEventDeclineLoading: false,
+  specificTeacherEventDeclineError: null,
 };
 
 const scheduleTuitionEventsTeacherSlice = createSlice({
@@ -62,6 +68,40 @@ const scheduleTuitionEventsTeacherSlice = createSlice({
       state.specificTeacherEventsLoading = false;
       state.specificTeacherEventsError = action.payload;
     },
+
+    // Accept event request
+    specificTeacherEventAcceptRequestStart: (state) => {
+      state.specificTeacherEventAcceptLoading = true;
+      state.specificTeacherEventAcceptError = null;
+    },
+    specificTeacherEventAcceptRequestSuccess: (state, { payload }) => {
+      state.specificTeacherEventAcceptLoading = false;
+      // Update the matching event’s status instantly
+      state.specificTeacherEvents = state.specificTeacherEvents.map((ev) =>
+        ev.id === payload ? { ...ev, status: "accepted" } : ev
+      );
+    },
+    specificTeacherEventAcceptRequestFailure: (state, { payload }) => {
+      state.specificTeacherEventAcceptLoading = false;
+      state.specificTeacherEventAcceptError = payload;
+    },
+
+    // Decline event request
+    specificTeacherEventDeclineRequestStart: (state) => {
+      state.specificTeacherEventDeclineLoading = true;
+      state.specificTeacherEventDeclineError = null;
+    },
+    specificTeacherEventDeclineRequestSuccess: (state, { payload }) => {
+      state.specificTeacherEventDeclineLoading = false;
+      // Update the matching event’s status instantly
+      state.specificTeacherEvents = state.specificTeacherEvents.map((ev) =>
+        ev.id === payload ? { ...ev, status: "rejected" } : ev
+      );
+    },
+    specificTeacherEventDeclineRequestFailure: (state, { payload }) => {
+      state.specificTeacherEventDeclineLoading = false;
+      state.specificTeacherEventDeclineError = payload;
+    },
   },
 });
 
@@ -77,6 +117,14 @@ export const {
   fetchSpecificTeacherEventsStart,
   fetchSpecificTeacherEventsSuccess,
   fetchSpecificTeacherEventsFailure,
+
+  specificTeacherEventAcceptRequestStart,
+  specificTeacherEventAcceptRequestSuccess,
+  specificTeacherEventAcceptRequestFailure,
+
+  specificTeacherEventDeclineRequestStart,
+  specificTeacherEventDeclineRequestSuccess,
+  specificTeacherEventDeclineRequestFailure,
 } = scheduleTuitionEventsTeacherSlice.actions;
 
 export default scheduleTuitionEventsTeacherSlice.reducer;

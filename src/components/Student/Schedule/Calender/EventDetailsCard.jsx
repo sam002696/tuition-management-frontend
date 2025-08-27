@@ -1,4 +1,5 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const getStatusBadge = (status) => {
   const base =
@@ -18,10 +19,41 @@ const getStatusBadge = (status) => {
 };
 
 const EventDetailsCard = ({ selectedEvent }) => {
+  const dispatch = useDispatch();
+
+  const {
+    specificTeacherEvents,
+    specificTeacherEventsLoading,
+    specificTeacherEventsError,
+    specificTeacherEventAcceptLoading,
+    specificTeacherEventDeclineLoading,
+  } = useSelector((state) => state.scheduleTuitionEventsTeacher);
+
+  console.log(
+    specificTeacherEvents,
+    specificTeacherEventsLoading,
+    specificTeacherEventsError
+  );
+
+  console.log("selectedEvent", selectedEvent);
   if (!selectedEvent) return null;
 
-  const student = selectedEvent.selectedStudent?.student || {};
-  const tuition = selectedEvent.selectedStudent?.tuition_details || {};
+  const teacher = selectedEvent.selectedTeacher?.teacher || {};
+  const tuition = selectedEvent.selectedTeacher?.tuition_details || {};
+
+  const handleAccept = (id) => {
+    dispatch({
+      type: "SPECIFIC_EVENT_ACCEPT_REQUEST",
+      payload: { requestId: id, status: "accepted" },
+    });
+  };
+
+  const handleDecline = (id) => {
+    dispatch({
+      type: "SPECIFIC_EVENT_DECLINE_REQUEST",
+      payload: { requestId: id },
+    });
+  };
 
   return (
     <div className="max-w-full rounded-xl bg-white p-6 shadow-md ring-1 ring-gray-200 space-y-4 text-sm text-gray-700">
@@ -39,15 +71,15 @@ const EventDetailsCard = ({ selectedEvent }) => {
 
       <div className="flex items-center gap-4 pt-2 border-t border-gray-200">
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-800 font-semibold">
-          {student.name
+          {teacher.name
             ?.split(" ")
-            .filter(word => word.length > 0)
+            .filter((word) => word.length > 0)
             .map((word) => word[0])
             .join("")
             .toUpperCase() || "NA"}
         </div>
         <div>
-          <p className="text-sm font-medium text-gray-900">{student.name}</p>
+          <p className="text-sm font-medium text-gray-900">{teacher.name}</p>
           <p className="text-xs text-gray-500">
             {tuition.class_level || "N/A"}
           </p>
@@ -81,14 +113,33 @@ const EventDetailsCard = ({ selectedEvent }) => {
         </p>
       </div>
 
-      <div className="flex gap-4 pt-4 ">
-        <button className="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">
-          Edit Session
-        </button>
-        <button className="flex-1 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-100">
-          Cancel Session
-        </button>
-      </div>
+      {selectedEvent.status === "pending" && (
+        // Action Buttons
+        <div className="flex justify-end gap-3 mt-6">
+          <button
+            disabled={specificTeacherEventAcceptLoading}
+            onClick={() => handleAccept(selectedEvent.id)}
+            className={`px-4 py-2 text-sm rounded-md shadow-md transition ${
+              specificTeacherEventAcceptLoading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-gray-900 to-black text-white hover:opacity-90"
+            }`}
+          >
+            ✓ {specificTeacherEventAcceptLoading ? "Accepting..." : "Accept"}
+          </button>
+          <button
+            disabled={specificTeacherEventDeclineLoading}
+            onClick={() => handleDecline(selectedEvent.id)}
+            className={`px-4 py-2 text-sm rounded-md shadow-md transition ${
+              specificTeacherEventDeclineLoading
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-gradient-to-r from-gray-200 to-white text-black hover:opacity-90"
+            }`}
+          >
+            ✕ {specificTeacherEventDeclineLoading ? "Declining..." : "Decline"}
+          </button>
+        </div>
+      )}
     </div>
   );
 };
