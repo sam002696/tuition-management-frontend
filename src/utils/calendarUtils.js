@@ -20,7 +20,7 @@ export function generateCalendarDays(year, month, eventData) {
 function createDayObject(date, isCurrentMonth, eventData) {
   const yyyyMmDd = formatLocalDate(date);
 
-  const matchingEvent = eventData.find((e) => e.date === yyyyMmDd);
+  const matchingEvent = eventData?.find((e) => e.date === yyyyMmDd);
 
   return {
     date: yyyyMmDd,
