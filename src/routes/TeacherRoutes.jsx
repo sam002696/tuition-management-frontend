@@ -8,7 +8,7 @@ const ConnectStudents = lazy(() =>
 );
 const Schedule = lazy(() => import("../pages/Teacher/Schedule/Schedule"));
 
-const AdminRoutes = [
+const TeacherRoutes = [
   {
     path: "/dashboard",
 
@@ -34,4 +34,4 @@ const AdminRoutes = [
   },
 ];
 
-export default AdminRoutes;
+export default TeacherRoutes;
