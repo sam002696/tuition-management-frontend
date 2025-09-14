@@ -1,4 +1,6 @@
 import { lazy } from "react";
+import RequireRole from "./guards/RequireRole";
+import RequireAuth from "./guards/RequireAuth";
 const StudentDashboard = lazy(() =>
   import("../pages/Student/Dashboard/Dashboard")
 );
@@ -10,27 +12,18 @@ const Schedule = lazy(() => import("../pages/Student/Schedule/Schedule"));
 
 const StudentRoutes = [
   {
-    path: "/student-dashboard",
-
-    children: [{ path: "", element: <StudentDashboard /> }],
-  },
-
-  {
-    path: "/teacher-management",
-
-    children: [{ path: "", element: <MyTeachers /> }],
-  },
-
-  {
-    path: "/connect-with-teachers",
-
-    children: [{ path: "", element: <ConnectTeachers /> }],
-  },
-
-  {
-    path: "/student-schedule",
-
-    children: [{ path: "", element: <Schedule /> }],
+    element: <RequireAuth />,
+    children: [
+      {
+        element: <RequireRole role="student" />,
+        children: [
+          { path: "/student-dashboard", element: <StudentDashboard /> },
+          { path: "/teacher-management", element: <MyTeachers /> },
+          { path: "/connect-with-teachers", element: <ConnectTeachers /> },
+          { path: "/student-schedule", element: <Schedule /> },
+        ],
+      },
+    ],
   },
 ];
 
