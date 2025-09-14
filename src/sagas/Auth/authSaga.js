@@ -6,6 +6,9 @@ import {
   registerStart,
   registerSuccess,
   registerFailure,
+  resetPasswordStart,
+  resetPasswordSuccess,
+  resetPasswordFailure,
 } from "../../slices/Auth/authSlice";
 
 import { AUTH_API } from "../../utils/api";
@@ -88,9 +91,39 @@ function* logoutSaga({ payload }) {
   // redirecting to login page
   navigate("/login");
 }
+
+function* resetPasswordSaga({ payload }) {
+  try {
+    const { body, navigate } = payload; // {email, token, password, password_confirmation}
+    yield put(resetPasswordStart());
+
+    const res = yield call(() =>
+      fetcher(AUTH_API.RESET_PASSWORD, {
+        method: "POST",
+        body,
+      })
+    );
+
+    yield put(resetPasswordSuccess());
+    yield put(
+      setToastAlert({
+        type: "success",
+        message: res?.message || "Password has been reset.",
+      })
+    );
+
+    if (navigate) navigate("/login");
+  } catch (error) {
+    const message = error?.message || "Failed to reset password.";
+    yield put(resetPasswordFailure(message));
+    yield put(setToastAlert({ type: "error", message }));
+  }
+}
+
 // Root Auth Saga
 export default function* authSaga() {
   yield takeLatest("LOGIN", loginSaga);
   yield takeLatest("REGISTER", registerSaga);
   yield takeLatest("LOGOUT", logoutSaga);
+  yield takeLatest("RESET_PASSWORD", resetPasswordSaga);
 }

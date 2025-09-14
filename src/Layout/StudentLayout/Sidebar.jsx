@@ -10,7 +10,7 @@ import {
   UserPlusIcon,
   UserGroupIcon,
   CalendarIcon,
-  EnvelopeIcon,
+  // EnvelopeIcon,
   ArrowRightEndOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { AuthUser } from "../../helpers/AuthUser";
@@ -44,11 +44,11 @@ const navigation = [
   //     { name: "Edit event", href: "/dashboard/events/:id/edit" },
   //   ],
   // },
-  {
-    name: "Messages",
-    href: "/messages",
-    icon: EnvelopeIcon,
-  },
+  // {
+  //   name: "Messages",
+  //   href: "/messages",
+  //   icon: EnvelopeIcon,
+  // },
 ];
 
 function classNames(...classes) {
