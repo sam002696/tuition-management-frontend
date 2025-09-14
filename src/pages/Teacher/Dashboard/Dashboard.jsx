@@ -361,11 +361,6 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-
-        <footer className="flex items-center justify-between text-xs text-gray-400">
-          <div>Timezone: {meta?.timezone ?? "UTC"}</div>
-          <div>As of: {meta?.now_iso ?? meta?.date ?? "—"}</div>
-        </footer>
       </div>
     </TeacherLayout>
   );
