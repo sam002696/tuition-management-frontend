@@ -30,12 +30,12 @@ function* fetchRequestsSaga() {
     );
 
     yield put(fetchRequestsSuccess(response?.data?.requests || []));
-    yield put(
-      setToastAlert({
-        type: "success",
-        message: response?.message || "Requests fetched successfully.",
-      })
-    );
+    // yield put(
+    //   setToastAlert({
+    //     type: "success",
+    //     message: response?.message || "Requests fetched successfully.",
+    //   })
+    // );
   } catch (error) {
     const message = error?.message || "Failed to fetch teacher requests.";
     yield put(fetchRequestsFailure(message));
